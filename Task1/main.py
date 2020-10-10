@@ -1,7 +1,6 @@
 from datetime import datetime
 from timeit import default_timer as timer
 import pandas as pd
-import mysql.connector
 
 filePath = 'V:/311_Service_Requests_from_2010_to_Present-cut.csv'
 
@@ -37,23 +36,3 @@ print('Complaints type by Borough:')
 for borough, boroughComplaint in boroughsComplaintTypes:
     print(f'\t{borough:<15}:{boroughComplaint:>20}')
 print(f'Agency:\n\t{agency}')
-
-# db = mysql.connector.connect(
-#     host="localhost",
-#     user="root",
-#     password="test",
-#     database="task1"
-# )
-#
-# cursor = db.cursor()
-#
-# cursor.execute("SELECT COUNT(*), `Complaint Type` \
-# FROM task1.requests \
-# GROUP BY `Complaint Type` \
-# ORDER BY COUNT(*) desc \
-# LIMIT 1;")
-#
-# result = cursor.fetchall()
-#
-# for x in result:
-#     print(x)
