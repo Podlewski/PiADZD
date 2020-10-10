@@ -1,4 +1,6 @@
 import mysql.connector
+from datetime import datetime
+from timeit import default_timer as timer
 
 db = mysql.connector.connect(
     host="localhost",
@@ -8,14 +10,37 @@ db = mysql.connector.connect(
 )
 
 cursor = db.cursor()
+print(f'Current Time:\t{datetime.now().strftime("%H:%M:%S")}')
+sTimer = timer()
 
-cursor.execute("SELECT COUNT(*), `Complaint Type` \
+cursor.execute("SELECT `Complaint Type` \
 FROM task1.requests \
 GROUP BY `Complaint Type` \
-ORDER BY COUNT(*) desc \
+ORDER BY COUNT(*) DESC \
 LIMIT 1;")
+cTimer = timer()
+cRows = cursor.fetchall()
 
-result = cursor.fetchall()
+cursor.execute("SELECT Agency \
+FROM task1.requests \
+GROUP BY Agency \
+ORDER BY COUNT(*) DESC \
+LIMIT 1;")
+aTimer = timer()
+aRows = cursor.fetchall()
 
-for x in result:
-    print(x)
+print('\nANALYSIS TIMES -------------------------')
+print(f'Complaint Type:{cTimer - sTimer:10.3f} s')
+# print(f'Boroughs:      {bTimer - aTimer:10.3f} s')
+print(f'Agency:        {aTimer - cTimer:10.3f} s')
+
+print('\nANALYSIS RESULTS -----------------------')
+print('Complaint type:')
+for row in cRows:
+    print(f'\t{row[0]}')
+# print('Complaints type by Borough:')
+# for row in bRows:
+#     print(f'\t{row[0]:<15}:{row[1]:>20}')
+print('Agency:')
+for row in aRows:
+    print(f'\t{row[0]}')
