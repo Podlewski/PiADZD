@@ -6,26 +6,26 @@ db = mysql.connector.connect(
     host="localhost",
     user="root",
     password="test",
-    database="task1"
+    database="ServiceRequests"
 )
 
 cursor = db.cursor()
 print(f'Current Time:\t{datetime.now().strftime("%H:%M:%S")}')
 sTimer = timer()
 
-cursor.execute("SELECT `Complaint Type` \
-FROM task1.requests \
-GROUP BY `Complaint Type` \
-ORDER BY COUNT(*) DESC \
-LIMIT 1;")
+cursor.execute("SELECT complaintType \
+                FROM ServiceRequests.sr \
+                GROUP BY complaintType \
+                ORDER BY COUNT(*) DESC \
+                LIMIT 1;")
 cTimer = timer()
 cRows = cursor.fetchall()
 
 cursor.execute("SELECT Agency \
-FROM task1.requests \
-GROUP BY Agency \
-ORDER BY COUNT(*) DESC \
-LIMIT 1;")
+                FROM ServiceRequests.sr \
+                GROUP BY Agency \
+                ORDER BY COUNT(*) DESC \
+                LIMIT 1;")
 aTimer = timer()
 aRows = cursor.fetchall()
 
