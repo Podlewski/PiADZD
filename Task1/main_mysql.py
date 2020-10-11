@@ -29,18 +29,28 @@ cursor.execute("SELECT Agency \
 aTimer = timer()
 aRows = cursor.fetchall()
 
+cursor.execute("SELECT b.borough, (SELECT complaintType \
+                FROM ServiceRequests.sr \
+                WHERE borough = b.borough \
+                GROUP BY complaintType \
+                ORDER BY COUNT(*) DESC LIMIT 1) AS complaintType \
+                FROM ( \
+                SELECT DISTINCT borough FROM ServiceRequests.sr) AS b;")
+bTimer = timer()
+bRows = cursor.fetchall()
+
 print('\nANALYSIS TIMES -------------------------')
 print(f'Complaint Type:{cTimer - sTimer:10.3f} s')
-# print(f'Boroughs:      {bTimer - aTimer:10.3f} s')
+print(f'Boroughs:      {bTimer - aTimer:10.3f} s')
 print(f'Agency:        {aTimer - cTimer:10.3f} s')
 
 print('\nANALYSIS RESULTS -----------------------')
 print('Complaint type:')
 for row in cRows:
     print(f'\t{row[0]}')
-# print('Complaints type by Borough:')
-# for row in bRows:
-#     print(f'\t{row[0]:<15}:{row[1]:>20}')
+print('Complaints type by Borough:')
+for row in bRows[:-1]:
+    print(f'\t{row[0]:<15}:{row[1]:>20}')
 print('Agency:')
 for row in aRows:
     print(f'\t{row[0]}')
