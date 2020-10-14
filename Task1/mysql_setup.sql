@@ -3,7 +3,7 @@ create database if not exists ServiceRequests;
 use ServiceRequests;
 create table sr(
 	id bigint auto_increment primary key,
-    agency nvarchar(50),
+    agencyName nvarchar(100),
     complaintType nvarchar(50),
     borough nvarchar(50)
 );
@@ -16,6 +16,6 @@ fields terminated by ','
 optionally enclosed by '"'
 lines terminated by '\n'
 ignore 1 lines
-(@id, @col, @col, @agency, @col, @complaintType, @col, @col, @col, @col, @col, @col, @col,
+(@id, @col, @col, @col, @agencyName, @complaintType, @col, @col, @col, @col, @col, @col, @col,
 @col, @col, @col, @col, @col, @col, @col, @col, @col, @col, @col, @col, @borough)
-set id=@id, agency=@agency, complaintType=@complaintType, borough=@borough;
+set id=@id, agencyName=@agencyName, complaintType=@complaintType, borough=@borough;
