@@ -23,15 +23,15 @@ use ServiceRequests
 go
 create table sr (
     id              bigint identity (1, 1) primary key,
-    agency          nvarchar(50),
+    agency          nvarchar(100),
     complaintType   nvarchar(50),
     borough         nvarchar(50)
 )
 go
 
 bulk insert ServiceRequests..sr
-from 'V:\311_Service_Requests_from_2010_to_Present-cut.csv'
-with (fieldterminator = ',',
+from 'V:\311_Service_Requests_from_2010_to_Present-cut2.csv'
+with (fieldterminator = '~',
       rowterminator = '\n',
       firstrow = 2)
 go
@@ -54,12 +54,12 @@ group by agency
 order by count(*) desc
 
 -- 2
-select srout.borough, (select top 1 srin.complaintType
-                       from ServiceRequests..sr as srin
-                       where srin.borough = srout.borough
-                       group by srin.complaintType
-                       order by count(*) desc) as 'complaintType'
-from ServiceRequests..sr as srout
-group by srout.borough
+select b.borough, b.complaintType
+from (select c.borough, c.complaintType, row_number() over(partition by c.borough
+                                                           order by c.complaintCount desc) as row_num
+      from (select complaintType, borough, count(*) as complaintCount
+            from ServiceRequests..sr
+            group by borough, complaintType) as c) as b
+where row_num = 1;
 
 

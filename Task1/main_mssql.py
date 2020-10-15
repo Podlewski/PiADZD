@@ -3,45 +3,73 @@ from datetime import datetime
 from timeit import default_timer as timer
 import pyodbc
 
-instance_name = sys.argv[1]
-connection = pyodbc.connect('Driver={SQL Server};'
-                            f'Server={instance_name};'
-                            'Database=ServiceRequests;'
-                            'Trusted_Connection=yes;')
-cursor = connection.cursor()
 print(f'Current Time:\t{datetime.now().strftime("%H:%M:%S")}')
 sTimer = timer()
 
-cursor.execute('select top 1 complaintType '
-               'from ServiceRequests..sr '
-               'group by complaintType '
-               'order by count(*) desc')
+instance_name = sys.argv[1]
+connection = pyodbc.connect('Driver={SQL Server};'
+                            f'Server={instance_name};'
+                            'Database=master;'
+                            'Trusted_Connection=yes;',
+                            autocommit=True)
+cursor = connection.cursor()
+cursor.execute("""if exists (select 1 from master..sysdatabases where name='ServiceRequests')
+                  begin
+                      use master
+                      alter database ServiceRequests set single_user with rollback immediate
+                      drop database ServiceRequests
+                  end""")
+cursor.execute("""create database ServiceRequests
+                  on (name = ServiceRequests_dat,
+                      filename = 'V:\mssql\ServiceRequests.mdf')
+                  log
+                  on (name = ServiceRequests_log,
+                      filename = 'V:\mssql\ServiceRequests.ldf')""")
+cursor.execute("""use ServiceRequests
+                  create table sr (
+                      id              bigint identity (1, 1) primary key,
+                      agency          nvarchar(100),
+                      complaintType   nvarchar(50),
+                      borough         nvarchar(50)
+                  )""")
+cursor.execute("""bulk insert ServiceRequests..sr
+                  from 'V:\\311_Service_Requests_from_2010_to_Present-cut2.csv'
+                  with (fieldterminator = '~',
+                        rowterminator = '\\n',
+                        firstrow = 2)""")
+lTimer = timer()
+
+cursor.execute("""select top 1 complaintType
+                  from ServiceRequests..sr
+                  group by complaintType
+                  order by count(*) desc""")
 cTimer = timer()
 cRows = cursor.fetchall()
 
-cursor.execute('select top 1 agency '
-               'from ServiceRequests..sr '
-               'group by agency '
-               'order by count(*) desc')
+cursor.execute("""select top 1 agency
+                  from ServiceRequests..sr
+                  group by agency
+                  order by count(*) desc""")
 aTimer = timer()
 aRows = cursor.fetchall()
 
-cursor.execute('select srout.borough, (select top 1 srin.complaintType '
-               'from ServiceRequests..sr as srin '
-               'where srin.borough = srout.borough '
-               'group by srin.complaintType '
-               'order by count(*) desc) as "complaintType" '
-               'from ServiceRequests..sr as srout '
-               'group by srout.borough')
+cursor.execute("""select b.borough, b.complaintType
+                  from (select c.borough, c.complaintType, row_number() over(partition by c.borough
+                                                                             order by c.complaintCount desc) as row_num
+                        from (select complaintType, borough, count(*) as complaintCount
+                              from ServiceRequests..sr
+                              group by borough, complaintType) as c) as b
+                  where row_num = 1""")
 bTimer = timer()
 bRows = cursor.fetchall()
 cursor.close()
 connection.close()
 
-print('\nANALYSIS TIMES -------------------------')
-print(f'Complaint Type:{cTimer - sTimer:10.3f} s')
-print(f'Boroughs:      {bTimer - aTimer:10.3f} s')
-print(f'Agency:        {aTimer - cTimer:10.3f} s')
+print('\nTIMES ----------------------------------')
+print(f'Loading time:   {lTimer - sTimer:10.3f} s')
+print(f'Complaint Type: {cTimer - lTimer:10.3f} s')
+print(f'Boroughs:       {bTimer - aTimer:10.3f} s')
+print(f'Agency:         {aTimer - cTimer:10.3f} s')
 
 print('\nANALYSIS RESULTS -----------------------')
 print('Complaint type:')
