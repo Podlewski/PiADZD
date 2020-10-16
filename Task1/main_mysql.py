@@ -1,16 +1,42 @@
-import pyodbc
-from datetime import datetime
+import mysql.connector
 from timeit import default_timer as timer
 
-connection = pyodbc.connect('Driver=MySQL ODBC 8.0 ANSI Driver;'
-                            'Server=localhost;'
-                            'Database=ServiceRequests;'
-                            'UID=root;'
-                            'PWD=test;')
+connection = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="test",
+    allow_local_infile=True
+)
 
 cursor = connection.cursor()
-print(f'Current Time:\t{datetime.now().strftime("%H:%M:%S")}')
 sTimer = timer()
+
+query = "DROP DATABASE IF EXISTS ServiceRequests; \
+                CREATE DATABASE ServiceRequests; \
+                USE ServiceRequests; \
+                CREATE TABLE sr(\
+	                id BIGINT AUTO_INCREMENT PRIMARY KEY, \
+                    agencyName NVARCHAR(100), \
+                    complaintType NVARCHAR(50), \
+                    borough NVARCHAR(50) \
+                ); \
+                SET GLOBAL local_infile=1; \
+                LOAD DATA LOCAL INFILE 'D:/311_Service_Requests_from_2010_to_Present.csv' \
+                INTO TABLE ServiceRequests.sr \
+                FIELDS TERMINATED BY ',' \
+                OPTIONALLY ENCLOSED BY '\"' \
+                LINES TERMINATED BY '\\n' \
+                IGNORE 1 LINES \
+                (@id, @col, @col, @col, @agencyName, @complaintType, @col, @col, @col, @col, \
+                @col, @col, @col, @col, @col, @col, @col, @col, @col, @col, @col, @col, @col, \
+                @col, @col, @borough) \
+                SET id=@id, agencyName=@agencyName, complaintType=@complaintType, borough=@borough;"
+
+for data in cursor.execute(query, multi=True):
+    if data.with_rows:
+        data = cursor.fetchall()
+
+lTimer = timer()
 
 cursor.execute("SELECT complaintType \
                 FROM ServiceRequests.sr \
@@ -38,8 +64,13 @@ cursor.execute("SELECT b.borough, b.complaintType \
 bTimer = timer()
 bRows = cursor.fetchall()
 
+cursor.close()
+connection.close()
+
+print(f'Loading time:     {lTimer - sTimer:7.2f} s')
+
 print('\nANALYSIS TIMES -------------------------')
-print(f'Complaint Type:{cTimer - sTimer:10.3f} s')
+print(f'Complaint Type:{cTimer - lTimer:10.3f} s')
 print(f'Boroughs:      {bTimer - aTimer:10.3f} s')
 print(f'Agency:        {aTimer - cTimer:10.3f} s')
 
@@ -48,8 +79,9 @@ print('Complaint type:')
 for row in cRows:
     print(f'\t{row[0]}')
 print('Complaints type by Borough:')
-for row in bRows[1:]:
-    print(f'\t{row[0]:<15}:{row[1]:>20}')
+for row in bRows:
+    if row[0]:
+        print(f'\t{row[0]:<15}:{row[1]:>20}')
 print('Agency:')
 for row in aRows:
     print(f'\t{row[0]}')

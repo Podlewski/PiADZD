@@ -1,4 +1,5 @@
-create database if not exists ServiceRequests;
+drop database if exists ServiceRequests;
+create database ServiceRequests;
 
 use ServiceRequests;
 create table sr(
