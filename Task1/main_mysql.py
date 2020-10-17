@@ -42,7 +42,7 @@ cursor.execute("SELECT complaintType \
                 FROM ServiceRequests.sr \
                 GROUP BY complaintType \
                 ORDER BY COUNT(*) DESC \
-                LIMIT 1;")
+                LIMIT 10;")
 cTimer = timer()
 cRows = cursor.fetchall()
 
@@ -50,7 +50,7 @@ cursor.execute("SELECT agencyName \
                 FROM ServiceRequests.sr \
                 GROUP BY agencyName \
                 ORDER BY COUNT(*) DESC \
-                LIMIT 1;")
+                LIMIT 10;")
 aTimer = timer()
 aRows = cursor.fetchall()
 
@@ -60,7 +60,7 @@ cursor.execute("SELECT b.borough, b.complaintType \
                 FROM (SELECT complaintType, borough, COUNT(*) AS complaintCount \
                 FROM ServiceRequests.sr \
                 GROUP BY borough, complaintType) AS c) AS b \
-                WHERE row_num = 1;")
+                WHERE row_num <= 10;")
 bTimer = timer()
 bRows = cursor.fetchall()
 
