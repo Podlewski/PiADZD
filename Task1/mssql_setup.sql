@@ -29,6 +29,10 @@ create table sr (
 )
 go
 
+create nonclustered index ix_sra on sr(agency asc)
+create nonclustered index ix_src on sr(complaintType asc)
+create nonclustered index ic_srb on sr(borough asc)
+
 bulk insert ServiceRequests..sr
 from 'V:\311_Service_Requests_from_2010_to_Present-cut2.csv'
 with (fieldterminator = '~',
@@ -42,13 +46,13 @@ select count(*) from ServiceRequests..sr
 select top 10 * from ServiceRequests..sr
 
 -- 1
-select top 1 complaintType
+select top 10 complaintType
 from ServiceRequests..sr
 group by complaintType
 order by count(*) desc
 
 -- 3
-select top 1 agency
+select top 10 agency
 from ServiceRequests..sr
 group by agency
 order by count(*) desc
@@ -60,6 +64,6 @@ from (select c.borough, c.complaintType, row_number() over(partition by c.boroug
       from (select complaintType, borough, count(*) as complaintCount
             from ServiceRequests..sr
             group by borough, complaintType) as c) as b
-where row_num = 1;
+where row_num <= 10;
 
 

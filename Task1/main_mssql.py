@@ -65,10 +65,46 @@ cursor.execute("""select b.borough, b.complaintType
                   where row_num <= 10""")
 bTimer = timer()
 bRows = cursor.fetchall()
+
+print('\nTIMES ----------------------------------')
+print(f'Loading time:   {lTimer - sTimer:10.3f} s')
+print(f'Complaint Type: {cTimer - lTimer:10.3f} s')
+print(f'Boroughs:       {bTimer - aTimer:10.3f} s')
+print(f'Agency:         {aTimer - cTimer:10.3f} s')
+###############################################################################
+sTimer = timer()
+cursor.execute("""create nonclustered index ix_sra on sr(agency)
+                  create nonclustered index ix_src on sr(complaintType)
+                  create nonclustered index ic_srb on sr(complaintType, borough)""")
+lTimer = timer()
+
+cursor.execute("""select top 10 complaintType
+                  from ServiceRequests..sr
+                  group by complaintType
+                  order by count(*) desc""")
+cTimer = timer()
+cRows = cursor.fetchall()
+
+cursor.execute("""select top 10 agency
+                  from ServiceRequests..sr
+                  group by agency
+                  order by count(*) desc""")
+aTimer = timer()
+aRows = cursor.fetchall()
+
+cursor.execute("""select b.borough, b.complaintType
+                  from (select c.borough, c.complaintType, row_number() over(partition by c.borough
+                                                                             order by c.complaintCount desc) as row_num
+                        from (select complaintType, borough, count(*) as complaintCount
+                              from ServiceRequests..sr
+                              group by borough, complaintType) as c) as b
+                  where row_num <= 10""")
+bTimer = timer()
+bRows = cursor.fetchall()
 cursor.close()
 connection.close()
 
-print('\nTIMES ----------------------------------')
+print('\nTIMES part 2 ---------------------------')
 print(f'Loading time:   {lTimer - sTimer:10.3f} s')
 print(f'Complaint Type: {cTimer - lTimer:10.3f} s')
 print(f'Boroughs:       {bTimer - aTimer:10.3f} s')
