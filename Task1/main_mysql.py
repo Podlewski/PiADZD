@@ -56,9 +56,9 @@ connection = mysql.connector.connect(
 cursor = connection.cursor()
 sTimer = timer()
 
-# for data in cursor.execute(setupQuery, multi=True):
-#     if data.with_rows:
-#         data = cursor.fetchall()
+for data in cursor.execute(setupQuery, multi=True):
+    if data.with_rows:
+        data = cursor.fetchall()
 lTimer = timer()
 
 cursor.execute(complaintTypeQuery)
