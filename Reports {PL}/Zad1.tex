@@ -1,0 +1,229 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[verbose,a4paper,tmargin=2cm,bmargin=2.33cm,lmargin=2.5cm,rmargin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{lastpage}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks = true,
+    linkcolor = black,
+    urlcolor = cyan
+}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{hyperref} 
+\usepackage{xcolor}
+\usepackage{tikz}
+\frenchspacing
+\pagestyle{fancyplain}
+\fancyhf{}
+
+\usepackage{setspace}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.5pt}
+\newcommand{\degree}{\ensuremath{^{\circ}}} 
+% \fancyfoot[L]{Przetwarzanie i analiza dużych zbiorów danych: }
+% \fancyfoot[R]{\thepage\ / \pageref{LastPage}}
+\fancyfoot[L]{Przetwarzanie i analiza dużych zbiorów danych: \\Aleksandra Kowalczyk, Zbigniew Nowacki, Karol Podlewski}
+\fancyfoot[R]{\\\thepage\ / \pageref{LastPage}}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+
+\begin{tabular}{rcl}
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234073~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Aleksandra Kowalczyk~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+&
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234102~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Zbigniew Nowacki~~~~~~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+&
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234106~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Karol Podlewski~~~~~~~~~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+
+\end{tabular}
+~\\~\\~\\ 
+\end{center}
+\begin{tabular}{ll}
+\LARGE{\textbf{Kierunek}}& \LARGE{Informatyka Stosowana} \\
+\LARGE{\textbf{Stopień}}& \LARGE{II} \\
+\LARGE{\textbf{Specjalizacja}}& \LARGE{Data Science} \\
+\LARGE{\textbf{Semestr}}& \LARGE{2} \\\\
+\LARGE{\textbf{Data oddania}}& \LARGE{21 października 2020} \\\\\\\\\\\\\\
+\end{tabular}
+
+\begin{center}
+\textbf{\Huge{Przetwarzanie i analiza\\}}
+\textbf{\Huge{dużych zbiorów danych\\~\\~\\~}}
+\textbf{\Huge{Zadanie 1}}
+\end{center}
+
+\end{titlepage}
+
+\setcounter{page}{2}
+
+\setstretch{1.4}
+\tableofcontents
+
+\newpage
+\section{Cel zadania}
+
+Celem zadania było porównanie czasów analizy danych dotyczących zgłoszeń do władz Nowego Jorku za pośrednictwem numeru 311. Należało znaleźć najczęściej zgłaszane skargi (ogólnie, a także dla każdej dzielnicy) oraz urzędy, do których najczęściej zgłaszano te skargi - w przedstawionym rozwiązaniu za każdym razem szukaliśmy 10 najczęściej występujących wartości.
+
+Zadanie należało wykonać za pomocą skryptu napisanego w języku python - wyszukując odpowiednie treści bezpośrednio w pliku csv oraz przez zapytania do bazy danych. Następnie należało przeprowadzić działania mające na celu redukcję czasu wykonywania kwerend.
+
+\section{Opis implementacji}
+
+W celu realizacji zadania wykorzystano bazy danych MS SQL oraz MySQL. Przy skryptach niezbędne okazały się biblioteki mysql, pandas, pyodbc oraz timeit.
+
+Z pliku .csv wczytywano jedynie kolumny, których treść była związana z zadaniem: \textit{Agency Name}, \textit{Complaint Type} oraz \textit{Borough}. W przypadku bazy danych MS SQL oznaczało to stworzenie pomocniczego pliku .csv z wybranymi kolumnami -- jego tworzenie zostało zawarte w czasie wczytywania danych.
+
+W celu optymalizacji czasu zapytań dla każdej z baz zostało zastosowane indeksowanie na wszystkich kolumnach.
+
+\section{Uzyskane wyniki}
+
+Pierwszym krokiem było zmierzenie czasu wczytywania danych. Działania mające na celu optymalizację czasu zapytań nie dotyczyły bezpośrednio wczytywania danych, dlatego nie porównywano czasów wczytywania dla bazy danych przed oraz po dodaniu indeksów. Wyniki przedstawiono w tabeli \ref{tab:loading}.
+
+\begin{table}[h!]
+\begin{center}
+\caption{Porównanie czasów wczytywania bazy danych}
+\label{tab:loading}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+ & Próba 1 & Próba 2 & Próba 3 & Próba 4 & Próba 5 & \textbf{Średnia} \\ \hline
+Skrypt & 129,67 & 128,44 & 130,00 & 127,78 & 128,94 & \textbf{128,97} \\ \hline
+MS SQL & 498,44 & 351,10 & 433,34 & 362,29 & 359,55 & \textbf{400,94} \\ \hline
+MySQL & 2625,13 & 2664,90 & 2515,30 & 2870,82 & 2811,83 & \textbf{2697,60} \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Następnie zmierzono czasy indeksowania dla baz danych. Wyniki zostały przedstawione w tabeli \ref{tab:index}.
+
+\begin{table}[h!]
+\begin{center}
+\caption{Porównanie czasów indeksowania tabel}
+\label{tab:index}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+ & Próba 1 & Próba 2 & Próba 3 & Próba 4 & Próba 5 & \textbf{Średnia} \\ \hline
+MS SQL + Indeks & 809,48 & 708,06 & 742,05 & 710,20 & 738,95 & \textbf{741,75} \\ \hline
+MySQL + Indeks & 1093,88 & 1117,06 & 1131,49 & 1068,48 & 1072,74 & \textbf{1077,55} \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Kolejnym krokiem było sprawdzenie jak dużo czasu zajmowały konkretne zapytania. Pierwsze zapytanie poszukiwało najczęściej zgłaszanych skarg. Były to odpowiednio: \textit{Noise - Residential}, \textit{Heat/Hot Water}, \textit{Illegal Parking}, \textit{Street Condition}, \textit{Blocked Driveway}, \textit{Street Light Condition}, \textit{Heating}, \textit{Plumbing}, \textit{Water System} oraz \textit{Noise - Street/Sidewalk}. W tabeli \ref{tab:query1} przedstawiono czasy zapytań.
+
+\begin{table}[h!]
+\begin{center}
+\caption{Porównanie czasów zapytania poszukującego najczęściej zgłaszane skargi}
+\label{tab:query1}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+ & Próba 1 & Próba 2 & Próba 3 & Próba 4 & Próba 5 & \textbf{Średnia} \\ \hline
+Skrypt & 3,45 & 3,32 & 3,37 & 3,51 & 3,44 & \textbf{3,42} \\ \hline
+MS SQL & 38,94 & 40,76 & 40,79 & 39,08 & 40,55 & \textbf{40,02} \\ \hline
+MS SQL + Indeks & 21,52 & 19,70 & 20,66 & 20,07 & 20,80 & \textbf{20,55} \\ \hline
+MySQL & 75,89 & 77,84 & 76,17 & 75,50 & 77,78 & \textbf{76,64} \\ \hline
+MySQL + Indeks & 17,78 & 18,04 & 19,70 & 19,72 & 16,77 & \textbf{18,40} \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Drugie zapytanie dotyczyło najczęściej zgłaszanych skarg dla każdej dzielnicy Nowego Jorku. Uzyskano następujące wyniki:
+\begin{itemize}
+    \item Bronx - \textit{Noise - Residential, Heat/Hot Water, Street Light Condition, Heating, PLUMBING, Blocked Driveway, Noise - Street/Sidewalk, Unsanitary Condition, Water System, Illegal Parking}.
+    \item Brooklyn - \textit{Noise - Residential, Heat/Hot Water, Illegal Parking, Blocked Driveway, Street Condition, Street Light Condition, PLUMBING, General Construction/Plumbing, Heating, Water System}.  
+    \item Manhattan - \textit{Noise - Residential, Heat/Hot Water, Noise - Street/Sidewalk, Noise, Street Condition, Illegal Parking, Noise - Commercial, Heating, Street Light Condition, Water System}.
+    \item Queens - \textit{Noise - Residential, Blocked Driveway, Illegal Parking, Street Condition, Street Light Condition, Water System, Heat/Hot Water, Damaged Tree, Sewer, General Construction/Plumbing}.
+    \item Staten Island - \textit{Street Condition, Street Light Condition, Noise - Residential, Illegal Parking, Water System, Missed Collection (All Materials), Sewer, Damaged Tree, Dirty Conditions, Blocked Driveway}.
+    \item Brak przypisanej dzielnicy - \textit{Heating, General Construction, PLUMBING, Benefit Card Replacement, Paint - Plaster, Nonconst, DOF Parking - Payment Issue, HPD Literature Request, Electric, DCA / DOH New License Application Request}.
+\end{itemize}
+W tabeli \ref{tab:query2} przedstawiono czasy zapytań.
+
+\begin{table}[h!]
+\begin{center}
+\caption{Porównanie czasów zapytania poszukującego najczęściej zgłaszaną skargę dla każdej dzielnicy}
+\label{tab:query2}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+ & Próba 1 & Próba 2 & Próba 3 & Próba 4 & Próba 5 & \textbf{Średnia} \\ \hline
+Skrypt & 104,49 & 90,25 & 101,8 & 95,5 & 102,22 & \textbf{98,85} \\ \hline
+MS SQL & 38,89 & 40,72 & 40,24 & 38,87 & 40,18 & \textbf{39,78} \\ \hline
+MS SQL + Indeks & 21,51 & 22,49 & 21,20 & 21,09 & 21,25 & \textbf{21,51} \\ \hline
+MySQL & 86,15 & 84,42 & 84,87 & 86,73 & 83,98 & \textbf{85,23} \\ \hline
+MySQL + Indeks & 49,47 & 47,65 & 49,35 & 48,05 & 47,18 & \textbf{48,34} \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Ostatnie zapytanie miało na celu znaleźć urzędy do których najczęściej zgłaszano skargi, były to odpowiednio: \textit{New York City Police Department}, \textit{Department of Housing Preservation and Development}, \textit{Department of Transportation}, \textit{Department of Environmental Protection}, \textit{Department of Buildings}, \textit{Department of Parks and Recreation}, \textit{Department of Health and Mental Hygiene}, \textit{Department of Sanitation}, \textit{Taxi and Limousine Commission} oraz \textit{Department of Consumer Affairs}. W tabeli \ref{tab:query3} widoczne są uzyskane rezultaty pomiarów czasy wykonania kwerend.
+
+\begin{table}[h!]
+\begin{center}
+\caption{Porównanie czasów zapytania poszukującego urzędu, do którego najczęściej zgłaszano skargi}
+\label{tab:query3}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+ & Próba 1 & Próba 2 & Próba 3 & Próba 4 & Próba 5 & \textbf{Średnia} \\ \hline
+Skrypt & 3,13 & 3,16 & 3,09 & 3,12 & 3,10 & \textbf{3,12} \\ \hline
+MS SQL & 42,61 & 39,92 & 38,84 & 38,49 & 36,57 & \textbf{39,29} \\ \hline
+MS SQL + Indeks & 21,61 & 21,88 & 22,28 & 22,73 & 22,01 & \textbf{22,10} \\ \hline
+MySQL & 76,63 & 78,82 & 79,23 & 79,49 & 79,40 & \textbf{78,71} \\ \hline
+MySQL + Indeks & 23,66 & 25,65 & 23,16 & 24,32 & 23,97 & \textbf{24,15} \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+W \ref{tab:summary1} podsumowano uzyskane wyniki poprzez zsumowanie średnich czasów uzyskanych przez każdy wariant na wszystkich etapach.
+
+\begin{table}[h!]
+\begin{center}
+\caption{Porównanie i zsumowanie czasów średnich dla każdego z wariantów}
+\label{tab:summary1}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+ & Wczytywanie & Indeks. & Zap. 1 & Zap. 2 & Zap. 3 & \textbf{Suma} \\ \hline
+Skrypt & 128,97 & - & 3,42 & 98,85 & 3,12 & \textbf{234,36} \\ \hline
+MS SQL & 400,94 & - & 40,02 & 39,78 & 39,29 & \textbf{520,03} \\ \hline
+MS SQL + Indeks & 400,94 & 741,75 & 20,55 & 21,52 & 22,10 & \textbf{1208,15} \\ \hline
+MySQL & 2697,6 & - & 76,64 & 85,23 & 78,71 & \textbf{2938,18} \\ \hline
+MySQL + Indeks & 2697,6 & 1077,55 & 18,40 & 48,34 & 24,15 & \textbf{3866,04} \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\newpage
+\section{Analiza}
+
+W przypadku gdy porównamy czasy wczytywania, pythonowy skrypt okaże się najszybszy, natomiast wykorzystanie bazy danych MySQL zajmie najwięcej czasu. W dodatku skrypt w języku Python był najszybszy dla 2 z 3 zapytań - nie poradził sobie tak dobrze jak bazy danych, kiedy do zapytania trzeba było wprowadzić dodatkowe kryteria - było to spowodowane tworzeniem dodatkowych obiektów.
+
+Baza danych MS SQL była szybsza w każdym sprawdzanym aspekcie od MySQL: wczytywania, indeksowania oraz zapytań. 
+
+Indeksowanie znacznie przyśpiesza proces analizy danych, należy jednak mieć na względzie to, że także zajmuje sporo czasu, który nie zostanie efektywnie spożytkowany w przypadku ciągle aktualizowanej bazy danych.
+
+\end{document}
