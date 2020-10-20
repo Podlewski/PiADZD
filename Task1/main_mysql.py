@@ -1,7 +1,11 @@
 import mysql.connector
+from os.path import abspath
+import sys
 from timeit import default_timer as timer
 
-setupQuery = "DROP DATABASE IF EXISTS ServiceRequests; \
+filePath = str(abspath(sys.argv[1])).replace('\\', '/')
+
+setupQuery = f"DROP DATABASE IF EXISTS ServiceRequests; \
                 CREATE DATABASE ServiceRequests; \
                 USE ServiceRequests; \
                 CREATE TABLE sr(\
@@ -11,7 +15,7 @@ setupQuery = "DROP DATABASE IF EXISTS ServiceRequests; \
                     borough NVARCHAR(50) \
                 ); \
                 SET GLOBAL local_infile=1; \
-                LOAD DATA LOCAL INFILE 'D:/311_Service_Requests_from_2010_to_Present.csv' \
+                LOAD DATA LOCAL INFILE '{filePath}' \
                 INTO TABLE ServiceRequests.sr \
                 FIELDS TERMINATED BY ',' \
                 OPTIONALLY ENCLOSED BY '\"' \
@@ -95,26 +99,30 @@ connection.close()
 
 print(f'Loading time:     {lTimer - sTimer:7.2f} s')
 
-print('\nANALYSIS TIMES -------------------------')
-print(f'Complaint Type:{cTimer - lTimer:10.3f} s')
-print(f'Boroughs:      {bTimer - aTimer:10.3f} s')
-print(f'Agency:        {aTimer - cTimer:10.3f} s')
+print('\n---------- ANALYSIS TIMES -----------------')
+print(f'Complaint Type:   {cTimer - lTimer:7.2f} s')
+print(f'Boroughs:         {bTimer - aTimer:7.2f} s')
+print(f'Agency:           {aTimer - cTimer:7.2f} s')
 
-print(f'\nIndexing time:     {iTimer - bTimer:7.2f} s')
+print()
+print(f'Indexing time:    {iTimer - bTimer:7.2f} s')
 
-print('\nANALYSIS AFTER INDEXING TIMES -------------------------')
-print(f'Complaint Type:{cIndTimer - iTimer:10.3f} s')
-print(f'Boroughs:      {bIndTimer - aIndTimer:10.3f} s')
-print(f'Agency:        {aIndTimer - cIndTimer:10.3f} s')
+print('\n---------- ANALYSIS TIMES AFTER INDEXING --')
+print(f'Complaint Type:   {cIndTimer - iTimer:7.2f} s')
+print(f'Boroughs:         {bIndTimer - aIndTimer:7.2f} s')
+print(f'Agency:           {aIndTimer - cIndTimer:7.2f} s')
 
-print('\nANALYSIS RESULTS -----------------------')
-print('Complaint type:')
+print('\n---------- ANALYSIS RESULTS ---------------')
+print('Complaint Type:')
 for row in cRows:
     print(f'\t{row[0]}')
-print('Complaints type by Borough:')
+
+print('\nComplaints Type by Borough:') 
 for row in bRows:
     if row[0]:
-        print(f'\t{row[0]:<15}:{row[1]:>20}')
-print('Agency:')
+        boro = row[0] + ':'
+        print(f'    {boro:<16}{row[1]}')
+
+print('\nAgency:')
 for row in aRows:
     print(f'\t{row[0]}')

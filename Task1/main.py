@@ -1,8 +1,8 @@
 import pandas as pd
+import sys
 from timeit import default_timer as timer
 
-
-filePath = '311_Service_Requests_from_2010_to_Present.csv'
+filePath = sys.argv[1]
 
 sTimer = timer()
 df = pd.read_csv(filePath, usecols=['Agency Name', 'Complaint Type', 'Borough'])
@@ -23,15 +23,23 @@ for borough in boroughs:
     boroughsComplaintTypes.append((borough, reducedDF['Complaint Type'].value_counts()[:10].index.tolist()))
 bTimer = timer()
 
-print('\n--- ANALYSIS TIMES ---')
+print('\n---------- ANALYSIS TIMES -----------------')
 print(f'Complaint Type:   {cTimer - lTimer:7.2f} s')
 print(f'Boroughs:         {bTimer - aTimer:7.2f} s')
 print(f'Agency:           {aTimer - cTimer:7.2f} s')
 
-print('\n--- ANALYSIS RESULTS ---')
-print(f'Complaint type:   {complaintType}')
-print('\nComplaint type by Borough:')
+print('\n---------- ANALYSIS RESULTS ---------------')
+print(f'Complaint Type:')
+for complaint in complaintType:
+    print(f'\t{complaint}')
+
+print('\nComplaints Type by Borough:')
 for borough, boroughComplaint in boroughsComplaintTypes:
     borough += ':'
-    print(f'   {borough:<18}{boroughComplaint}')
-print(f'\nAgency:           {agency}')
+    for complaint in boroughComplaint:
+        print(f'    {borough:<16}{complaint}')
+    
+
+print(f'\nAgency:')
+for ag in agency:
+    print(f'\t{ag}')
