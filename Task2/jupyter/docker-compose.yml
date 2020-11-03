@@ -1,0 +1,9 @@
+version: "3.5"
+services:
+  spark:
+    image: jupyter/pyspark-notebook
+    container_name: spark
+    volumes:
+      - c:/docker/pyspark-notebook:/home/jovyan/work
+    ports:
+      - 8888:8888
