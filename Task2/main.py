@@ -17,7 +17,7 @@ def get_mutal_friends(lines):
     return pairs
 
 def transform_pair(line):
-    return (line[0][0], (line[0][1], line[1]))
+    return (int(line[0][0]), (int(line[0][1]), line[1]))
 
 def get_top_ten_recomendations(line):
     return sorted(line, key = lambda x: (-x[1], x[0]))[:10]
