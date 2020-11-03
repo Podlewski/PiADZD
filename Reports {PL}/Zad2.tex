@@ -1,0 +1,139 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[verbose,a4paper,tmargin=2cm,bmargin=2.33cm,lmargin=2.5cm,rmargin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{lastpage}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks = true,
+    linkcolor = black,
+    urlcolor = cyan
+}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{hyperref} 
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{float}
+\frenchspacing
+\pagestyle{fancyplain}
+\fancyhf{}
+
+\usepackage{setspace}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.5pt}
+\newcommand{\degree}{\ensuremath{^{\circ}}} 
+% \fancyfoot[L]{Przetwarzanie i analiza dużych zbiorów danych: }
+% \fancyfoot[R]{\thepage\ / \pageref{LastPage}}
+\fancyfoot[L]{Przetwarzanie i analiza dużych zbiorów danych: \\Aleksandra Kowalczyk, Zbigniew Nowacki, Karol Podlewski}
+\fancyfoot[R]{\phantom{a} \\ \thepage\ / \pageref{LastPage}}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+
+\begin{tabular}{rcl}
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234073~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Aleksandra Kowalczyk~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+&
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234102~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Zbigniew Nowacki~~~~~~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+&
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234106~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Karol Podlewski~~~~~~~~~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+
+\end{tabular}
+~\\~\\~\\ 
+\end{center}
+\begin{tabular}{ll}
+\LARGE{\textbf{Kierunek}}& \LARGE{Informatyka Stosowana} \\
+\LARGE{\textbf{Stopień}}& \LARGE{II} \\
+\LARGE{\textbf{Specjalizacja}}& \LARGE{Data Science} \\
+\LARGE{\textbf{Semestr}}& \LARGE{2} \\\\
+\LARGE{\textbf{Data oddania}}& \LARGE{4 listopada 2020} \\\\\\\\\\\\\\
+\end{tabular}
+
+\begin{center}
+\textbf{\Huge{Przetwarzanie i analiza\\}}
+\textbf{\Huge{dużych zbiorów danych\\~\\~\\~}}
+\textbf{\Huge{Zadanie 2}}
+\end{center}
+
+\end{titlepage}
+
+\setcounter{page}{2}
+
+\setstretch{1.25}
+\tableofcontents
+
+\newpage
+\section{Cel zadania}
+
+Celem zadania była implementacja algorytmu "Osoby, które możesz znać", który jest wykorzystywany przede wszystkim przez media społecznościowe do sugerowania nowych, potencjalnych znajomych.
+
+Każdy użytkownik posiadający znajomych dostaje rekomendacje do 10 nowych użytkowników, którzy nie są jego znajomymi, a mają najwięcej wspólnych znajomych. W przypadku użytkowników nie posiadających znajomych, program powinien zwrócić pustą listę.
+
+\section{Opis implementacji}
+
+Do implementacji zadania wykorzystano język Python wraz z API PySpark, które umożliwiło skorzystanie z możliwości języka Apache Spark w pythonowym kodzie.
+Działanie programu można przedstawić w następujących krokach:
+\begin{enumerate}
+    \item Z podanego pliku tekstowego wczytano dane zawierające identyfikatory użytkowników oraz identyfikatory ich znajomych
+    \item Dla każdego użytkownika stworzono listę rekomendacji dla jego znajomych łącząc wszystkich ze sobą w pary - następnie usunięto każde wystąpienie pary znajomych, którzy już są znajomymi, po czym obliczono jak często dana para występuje
+    \item Dla każdego użytkownika przypisano parę w postaci nowego sugerowanego znajomego oraz liczby wspólnych znajomych, którą następnie posortowano po liczbie wspólnych znajomych i identyfikatorze użytkownika
+    \item Do tej listy dodano użytkowników, dla których algorytm nie wyznaczył żadnych rekomendacji
+\end{enumerate}
+
+\subsection{Wykorzystanie Apache Sparka}
+
+W celu implementacji algorytmu wykorzystano kolekcje RDD (Resilient Distributed Datasets), będące podstawową kolekcją obiektów Sparka, które są przystosowane do pracy z BigData. Obiekty RDD były poddawane przeróżnym transformacjom takim jak filtracja czy mapowanie. Niezbędne okazało się także korzystanie z redukcji czy sortowania obiektów po kluczu - niezwykle przydatna okazała się redukcja po kluczu \verb|reduceByKey()|, która znacznie ułatwiła proces zliczania par o identycznych kluczach. 
+
+\newpage
+
+\section{Uzyskane wyniki}
+
+W tabeli poniżej przedstawiono rekomendacje uzyskane dla użytkowników o identyfikatorach: 924, 8941, 8942, 9019, 9020, 9021, 9022, 9990, 9992 oraz 9993.
+
+\begin{table}[H]
+\centering
+\caption{Użytkownicy wskazani w poleceniu oraz proponowani im znajomi}
+\begin{tabular}{|c|l|}
+\hline
+Użytkownik & \multicolumn{1}{c|}{Rekomendacje} \\ \hline
+924 & 439, 2409, 6995, 11860, 15416, 43748, 45881 \\ \hline
+8941 & 8943, 8944, 8940 \\ \hline
+8942 & 8939, 8940, 8943, 8944 \\ \hline
+9019 & 9022, 317, 9023 \\ \hline
+9020 & 9021, 9016, 9017, 9022, 317, 9023 \\ \hline
+9021 & 9020, 9016, 9017, 9022, 317, 9023 \\ \hline
+9022 & 9019, 9020, 9021, 317, 9016, 9017, 9023 \\ \hline
+9990 & 13134, 13478, 13877, 34299, 34485, 34642, 37941 \\ \hline
+9992 & 9987, 9989, 35667, 9991 \\ \hline
+9993 & 9991, 13134, 13478, 13877, 34299, 34485, 34642, 37941 \\ \hline
+\end{tabular}
+\end{table}
+
+\end{document}
