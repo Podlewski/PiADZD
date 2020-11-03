@@ -22,8 +22,33 @@
     Zmierz łączny czas potrzebny na przekonwertowanie danych oraz wykonanie kwerend.
     Porównaj te czasy dla dwóch różnych baz danych (np. MySQL oraz SQLite).
 
-    > Ważne! Do łączenia się z bazą danych oraz wykonania kwerend wykorzystaj język Python.
+    > **Ważne!** Do łączenia się z bazą danych oraz wykonania kwerend wykorzystaj język Python.
 
 3. W jaki sposób można zredukować czas wykonania kwerend? Zaimplementuj własne rozwiązanie i przedstaw wyniki.
 
-    > Ważne! Wykonaj zadanie również wtedy, gdy osiągane rezultaty nie są lepsze od wyjściowych.
+    > **Ważne!** Wykonaj zadanie również wtedy, gdy osiągane rezultaty nie są lepsze od wyjściowych.
+
+## Zadanie 2
+
+Napisz program, który implementuje znany z mediów społecznościowych algorytm "Osoby, które możesz znać". Powinien on działać na zasadzie, że jeżeli dwóch użytkowników ma wielu wspólnych znajomych, to system proponuje im znajomość.
+
+> **Ważne!** W tym celu skorzystaj z Apache Spark oraz języka Python.
+
+_Algorytm_
+- dla każdego użytkownika program powinien polecić mu 10 nowych użytkowników, którzy nie są jego znajomymi, ale którzy mają z nim najwięcej wspólnych znajomych.
+
+_Plik wejściowy_
+- plik zawiera linie w formacie <UŻYTKOWNIK><TABULATOR><ZNAJOMI>, gdzie <UŻYTKOWNIK> oznacza unikalny identyfikator użytkownika, a <ZNAJOMI> to oddzielone po przecinku identyfikatory znajomych użytkownika o identyfikatorze <UŻYTKOWNIK>.
+
+_Plik wyjściowy_
+- plik powinien zawierać linie w formacie <UŻYTKOWNIK><TABULATOR><REKOMENDACJE>, gdzie <UŻYTKOWNIK> oznacza unikalny identyfikator użytkownika, a <REKOMENDACJE> to oddzielone po przecinku identyfikatory użytkowników, którzy są rekomendowani jako znajomi użytkownikowi o identyfikatorze <UŻYTKOWNIK>.
+
+    > **Ważne!** Rekomendacje powinny zostać posortowane malejąco według liczby wspólnych znajomych. Jeżeli rekomendowani użytkownicy mają tylu samych wspólnych znajomych, to należy ich posortować rosnąco według ich identyfikatora. Rekomendacje należy przedstawić również wtedy, gdy jest ich mniej niż 10. Jeżeli użytkownik nie ma znajomych, to wynikiem powinna być pusta lista.
+
+Opisz w maksymalnie 3 zdaniach, w jaki sposób skorzystałeś z Apache Spark, aby rozwiązać zadanie.
+
+Przedstaw rekomendacje dla użytkowników o identyfikatorach: 924, 8941, 8942, 9019, 9020, 9021, 9022, 9990, 9992, 9993.
+
+> **Ważne!** Przydatne może okazać się polecenie .take(X).
+
+> **Podpowiedź:** rekomendacje dla użytkownika o identyfikatorze 11 to: 27552, 7785, 27573, 27574, 27589, 27590, 27600, 27617, 27620, 27667.
