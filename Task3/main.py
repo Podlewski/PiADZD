@@ -7,6 +7,7 @@ import math
 MAX_ITERATIONS = 20
 METRICS = ['euclidean', 'manhattan']
 FILES = ['3b.txt', '3c.txt']
+NAMES = ['Random centroids', 'Max. dist. centroids']
 
 
 def split_line(line):
@@ -84,40 +85,54 @@ def main():
     vectors = data.map(split_line)
     cost_values_plot = []
 
-    for file in FILES:
-        for metric in METRICS:
+    for metric in METRICS:
+        for file in FILES:
             cost_values = kmeans(file, MAX_ITERATIONS, vectors, metric)
             cost_values_plot.append(cost_values)
             print('File:', file)
             print('Metric:', metric)
 
             for i, val in enumerate(cost_values):
-                print('Iteration:', i)
-                print('Cost: ', val)
+                print(f'{i:2d}:  {val:14.2f}')
 
-            print('Percent cost change:',
-                  (cost_values[0]-cost_values[9])/cost_values[0])
+            cost_change = (cost_values[0]-cost_values[9])/cost_values[0] 
+            print(f'Percent cost change: {cost_change*100:04.2f}%')
 
     sc.stop()
 
-    _, axs = plt.subplots(2, 2)
-    axs[0, 0].plot(cost_values_plot[0])
-    axs[0, 0].set_title('Euclidean - 3b.txt')
-    axs[0, 1].plot(cost_values_plot[1], 'tab:orange')
-    axs[0, 1].set_title('Manhattan - 3b.txt')
-    axs[1, 0].plot(cost_values_plot[2], 'tab:green')
-    axs[1, 0].set_title('Euclidean - 3c.txt')
-    axs[1, 1].plot(cost_values_plot[3], 'tab:red')
-    axs[1, 1].set_title('Manhattan - 3c.txt')
+    euclidean_plot_range = (min(cost_values_plot[0]+cost_values_plot[1])*0.8,
+                            max(cost_values_plot[0]+cost_values_plot[1])*1.1)
+    manhattan_plot_range = (min(cost_values_plot[2]+cost_values_plot[3])*0.8,
+                            max(cost_values_plot[2]+cost_values_plot[3])*1.1)
+
+    _, axs = plt.subplots(figsize=(6,8), nrows=2, ncols=2)
+
+    axs[0, 0].set_title(NAMES[0], y=1.05, size='large')
+    axs[0, 1].set_title(NAMES[1], y=1.05, size='large')
+    axs[0, 0].plot(cost_values_plot[0], 'limegreen')
+    axs[0, 1].plot(cost_values_plot[1], 'darkgreen')
+    axs[0, 0].set_ylim(euclidean_plot_range)
+    axs[0, 1].set_ylim(euclidean_plot_range)
+    axs[0, 0].annotate('Euclidean metric', xy=(0, 0.5), rotation=90,
+                       xytext=(-axs[1, 0].yaxis.labelpad - 9.5, 0),
+                       xycoords=axs[0, 0].yaxis.label, size='large',
+                       textcoords='offset points', ha='right', va='center')
+    axs[1, 0].plot(cost_values_plot[2], 'royalblue')
+    axs[1, 1].plot(cost_values_plot[3], 'mediumblue')
+    axs[1, 0].set_ylim(manhattan_plot_range)
+    axs[1, 1].set_ylim(manhattan_plot_range)
+    axs[1, 0].annotate('Manhattan metric', xy=(0, 0.5), rotation=90,
+                       xytext=(-axs[1, 0].yaxis.labelpad, 0),
+                       xycoords=axs[1, 0].yaxis.label, size='large',
+                       textcoords='offset points', ha='right', va='center')
 
     for ax in axs.flat:
         ax.set(xlabel='Iterations', ylabel='Cost')
-
-    for ax in axs.flat:
         ax.label_outer()
 
+    plt.tight_layout()
     plt.show()
-
+    # plt.savefig('task3_chart', dpi=600)
 
 if __name__ == "__main__":
     main()
