@@ -7,7 +7,6 @@ import math
 MAX_ITERATIONS = 20
 METRICS = ['euclidean', 'manhattan']
 FILES = ['3b.txt', '3c.txt']
-NAMES = ['Random centroids', 'Max. dist. centroids']
 
 
 def split_line(line):
@@ -107,13 +106,13 @@ def main():
 
     _, axs = plt.subplots(figsize=(6,8), nrows=2, ncols=2)
 
-    axs[0, 0].set_title(NAMES[0], y=1.05, size='large')
-    axs[0, 1].set_title(NAMES[1], y=1.05, size='large')
+    axs[0, 0].set_title('Plik ' + FILES[0], y=1.05, size='large')
+    axs[0, 1].set_title('Plik ' + FILES[1], y=1.05, size='large')
     axs[0, 0].plot(cost_values_plot[0], 'limegreen')
     axs[0, 1].plot(cost_values_plot[1], 'darkgreen')
     axs[0, 0].set_ylim(euclidean_plot_range)
     axs[0, 1].set_ylim(euclidean_plot_range)
-    axs[0, 0].annotate('Euclidean metric', xy=(0, 0.5), rotation=90,
+    axs[0, 0].annotate('Metryka euklidesowa', xy=(0, 0.5), rotation=90,
                        xytext=(-axs[1, 0].yaxis.labelpad - 9.5, 0),
                        xycoords=axs[0, 0].yaxis.label, size='large',
                        textcoords='offset points', ha='right', va='center')
@@ -121,13 +120,13 @@ def main():
     axs[1, 1].plot(cost_values_plot[3], 'mediumblue')
     axs[1, 0].set_ylim(manhattan_plot_range)
     axs[1, 1].set_ylim(manhattan_plot_range)
-    axs[1, 0].annotate('Manhattan metric', xy=(0, 0.5), rotation=90,
+    axs[1, 0].annotate('Metryka Manhattan', xy=(0, 0.5), rotation=90,
                        xytext=(-axs[1, 0].yaxis.labelpad, 0),
                        xycoords=axs[1, 0].yaxis.label, size='large',
                        textcoords='offset points', ha='right', va='center')
 
     for ax in axs.flat:
-        ax.set(xlabel='Iterations', ylabel='Cost')
+        ax.set(xlabel='Iteracje', ylabel='Koszt')
         ax.label_outer()
 
     plt.tight_layout()
