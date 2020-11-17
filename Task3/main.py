@@ -1,8 +1,10 @@
 from pyspark import SparkContext
 from statistics import mean
+from timeit import default_timer as timer
+import math
 import matplotlib.pyplot as plt
 import numpy as np
-import math
+
 
 MAX_ITERATIONS = 20
 METRICS = ['euclidean', 'manhattan']
@@ -84,6 +86,7 @@ def main():
     vectors = data.map(split_line)
     cost_values_plot = []
 
+    start_timer = timer()
     for metric in METRICS:
         for file in FILES:
             cost_values = kmeans(file, MAX_ITERATIONS, vectors, metric)
@@ -96,6 +99,7 @@ def main():
 
             cost_change = (cost_values[0]-cost_values[9])/cost_values[0] 
             print(f'Percent cost change: {cost_change*100:04.2f}%')
+    end_timer = timer()
 
     sc.stop()
 
@@ -130,8 +134,10 @@ def main():
         ax.label_outer()
 
     plt.tight_layout()
-    plt.show()
     # plt.savefig('task3_chart', dpi=600)
+    plt.show()
+
+    print(f'Processing time:{end_timer - start_timer:7.2f} s')
 
 if __name__ == "__main__":
     main()
