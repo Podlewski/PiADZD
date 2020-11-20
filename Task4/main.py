@@ -1,4 +1,5 @@
 import itertools
+from operator import itemgetter
 from os import system, name
 from pyspark import SparkContext
 from pyspark.rdd import RDD
@@ -39,12 +40,31 @@ def get_frequent_tuples(sessions: RDD, k: int, frequent_items: [], minimum: int 
     return dict(filter(lambda x: x[1] >= minimum, tuples.items()))
 
 
-def print_check(container):
-    if isinstance(container, RDD):
-        container = container.collect()
-    for t in container:
-        print(t)
-    print(len(container), '\n')
+def get_confidence_singles(tuples: {}, frequent_items: {}) -> []:
+    confidence = []
+    for key, value in tuples.items():
+        confidence.append(((key[0], key[1]), value / frequent_items[key[0]]))
+        confidence.append(((key[1], key[0]), value / frequent_items[key[1]]))
+    confidence.sort()
+    confidence.sort(key=itemgetter(1), reverse=True)
+    return confidence
+
+
+def items_from_tuples(tuples: {}) -> set:
+    return set([item for t in tuples for item in t])
+
+
+def get_confidence_tuples(tuples: {}, frequent_tuples: {}, k: int) -> []:
+    confidence = []
+    for key, value in tuples.items():
+        for c in itertools.combinations(key, k - 1):
+            if c in frequent_tuples:
+                pred = list(c)
+                succ = list(set(key) - set(c))
+                confidence.append((tuple(pred + succ), value / frequent_tuples[c]))
+    confidence.sort()
+    confidence.sort(key=itemgetter(1), reverse=True)
+    return confidence
 
 
 def main():
@@ -52,19 +72,24 @@ def main():
     [print() for _ in range(50)]
     file = sc.textFile('4.txt')
 
+    # extract sessions and items
     sessions = file.map(lambda x: split_line(x))
     items = sessions.flatMap(lambda x: x)
 
-    frequent_items = get_frequent_items(items).map(lambda x: x[0])
+    # get frequent items and their combinations with number of occurrences
+    frequent_items = dict(get_frequent_items(items).collect())
+    frequent_doubles = get_frequent_tuples(sessions, 2, frequent_items)
+    frequent_triples = get_frequent_tuples(sessions, 3, items_from_tuples(frequent_doubles))
 
-    frequent_doubles = get_frequent_tuples(sessions, 2,
-                                           frequent_items.collect())
-    frequent_triples = get_frequent_tuples(sessions, 3,
-                                           set([i for d in frequent_doubles for i in d]))
+    # count confidence levels
+    doubles_confidence = get_confidence_singles(frequent_doubles, frequent_items)
+    triples_confidence = get_confidence_tuples(frequent_triples, frequent_doubles, 3)
 
-    print_check(frequent_items)
-    print_check(frequent_doubles)
-    print_check(frequent_triples)
+    # print
+    for d in doubles_confidence[:5]:
+        print(d)
+    for t in triples_confidence[:5]:
+        print(t)
 
     sc.stop()
 
