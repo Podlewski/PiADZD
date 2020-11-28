@@ -17,8 +17,8 @@ def split_line(line):
 
 
 def get_frequent_items(items: RDD, minimum: int = 100) -> RDD:
-    item_pairs = items.map(lambda x: (x, 1))
-    item_counts = item_pairs.reduceByKey(lambda x, y: x + y)
+    item_counts = items.map(lambda x: (x, 1))
+    item_counts = item_counts.reduceByKey(lambda x, y: x + y)
     return item_counts.filter(lambda x: x[1] >= minimum)
 
 
@@ -67,6 +67,11 @@ def get_confidence_tuples(tuples: {}, frequent_tuples: {}, k: int) -> []:
     return confidence
 
 
+def print_results(array: []):
+    for i in array:
+        print(f'{i[0][:-1]} => {i[0][-1]}\t: conf = {i[1]}')
+
+
 def main():
     sc = SparkContext()
     [print() for _ in range(50)]
@@ -86,10 +91,9 @@ def main():
     triples_confidence = get_confidence_tuples(frequent_triples, frequent_doubles, 3)
 
     # print
-    for d in doubles_confidence[:5]:
-        print(d)
-    for t in triples_confidence[:5]:
-        print(t)
+    print('Predecessor => Successor\t: confidence level')
+    print_results(doubles_confidence[:5])
+    print_results(triples_confidence[:5])
 
     sc.stop()
 
