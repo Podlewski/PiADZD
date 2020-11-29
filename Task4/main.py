@@ -74,7 +74,7 @@ def print_results(array: []):
 
 def main():
     sc = SparkContext()
-    [print() for _ in range(50)]
+    clear_output()
     file = sc.textFile('4.txt')
 
     # extract sessions and items
@@ -94,6 +94,14 @@ def main():
     print('Predecessor => Successor\t: confidence level')
     print_results(doubles_confidence[:5])
     print_results(triples_confidence[:5])
+
+    # save
+    with open('result_doubles.txt', 'w') as fout:
+        for i in doubles_confidence:
+            fout.write(f'{i[0][0]} [{i[0][-1]}] {i[1]}\n')
+    with open('result_triples.txt', 'w') as fout:
+        for i in triples_confidence:
+            fout.write(f'{i[0][0]} {i[0][1]} [{i[0][-1]}] {i[1]}\n')
 
     sc.stop()
 
