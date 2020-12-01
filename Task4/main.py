@@ -16,38 +16,18 @@ def split_line(line):
     return items
 
 
-def get_frequent_items(items: RDD, minimum: int = 100) -> RDD:
-    item_counts = items.map(lambda x: (x, 1))
-    item_counts = item_counts.reduceByKey(lambda x, y: x + y)
-    return item_counts.filter(lambda x: x[1] >= minimum)
-
-
-def k_tuples(items: [], k: int) -> {}:
-    tuples = {}
-    for c in itertools.combinations(sorted(items), k):
-        tuples[c] = 0
-    return tuples
+def k_tuples(session, items: [], k: int):
+    tuples = [item for item in session if item in items]
+    return [(c, 1) for c in itertools.combinations(sorted(tuples), k)]
 
 
 def get_frequent_tuples(sessions: RDD, k: int, frequent_items: [], minimum: int = 100) -> {}:
-    tuples = k_tuples(frequent_items, k)
-    for session in sessions.toLocalIterator():
-        session_subset = sorted([item for item in session if item in frequent_items])
-        for item in itertools.combinations(session_subset, k):
-            if item in tuples:
-                tuples[item] += 1
-    # noinspection PyTypeChecker
-    return dict(filter(lambda x: x[1] >= minimum, tuples.items()))
-
-
-def get_confidence_singles(tuples: {}, frequent_items: {}) -> []:
-    confidence = []
-    for key, value in tuples.items():
-        confidence.append(((key[0], key[1]), value / frequent_items[key[0]]))
-        confidence.append(((key[1], key[0]), value / frequent_items[key[1]]))
-    confidence.sort()
-    confidence.sort(key=itemgetter(1), reverse=True)
-    return confidence
+    if k < 2:
+        tuples = sessions.flatMap(lambda x: x).map(lambda x: ((x,), 1))
+    else:
+        tuples = sessions.flatMap(lambda x: k_tuples(x, frequent_items, k))
+    tuples = tuples.reduceByKey(lambda x, y: x + y)
+    return dict(tuples.filter(lambda x: x[1] >= minimum).collect())
 
 
 def items_from_tuples(tuples: {}) -> set:
@@ -75,19 +55,16 @@ def print_results(array: []):
 def main():
     sc = SparkContext()
     clear_output()
-    file = sc.textFile('4.txt')
 
-    # extract sessions and items
-    sessions = file.map(lambda x: split_line(x))
-    items = sessions.flatMap(lambda x: x)
+    sessions = sc.textFile('4.txt').map(lambda x: split_line(x))
 
     # get frequent items and their combinations with number of occurrences
-    frequent_items = dict(get_frequent_items(items).collect())
-    frequent_doubles = get_frequent_tuples(sessions, 2, frequent_items)
+    frequent_singles = get_frequent_tuples(sessions, 1, None)
+    frequent_doubles = get_frequent_tuples(sessions, 2, items_from_tuples(frequent_singles))
     frequent_triples = get_frequent_tuples(sessions, 3, items_from_tuples(frequent_doubles))
 
     # count confidence levels
-    doubles_confidence = get_confidence_singles(frequent_doubles, frequent_items)
+    doubles_confidence = get_confidence_tuples(frequent_doubles, frequent_singles, 2)
     triples_confidence = get_confidence_tuples(frequent_triples, frequent_doubles, 3)
 
     # print
