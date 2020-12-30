@@ -1,0 +1,32 @@
+New York - ny.csv
+	2006 - 2019	https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i
+	https://data.cityofnewyork.us/api/views/qgea-i56i/rows.csv?accessType=DOWNLOAD
+
+Los Angeles - la.csv
+	2010 - 2019	https://data.lacity.org/Public-Safety/Crime-Data-from-2010-to-2019/63jg-8b9z
+	https://data.lacity.org/api/views/63jg-8b9z/rows.csv?accessType=DOWNLOAD
+
+Chicago - chicago.csv
+	2001 - 2019	https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-Present/ijzp-q8t2
+	https://data.cityofchicago.org/api/views/ijzp-q8t2/rows.csv?accessType=DOWNLOAD
+
+Houston
+--- brak porównywalnych danych ---
+
+Phoenix
+--- brak porównywalnych danych ---
+
+Philadephia
+	2006 - 2019	https://www.opendataphilly.org/dataset/crime-incidents (pobrane w okresie 2010-2019)
+	Ciężko pobrać :| 
+
+San Antonio
+--- brak porównywalnych danych ---
+
+San Diego
+--- brak porównywalnych danych ---
+
+Dallas
+--- nie działa portal Open Data :) ---
+
+... dalej mi się już nie chciało
