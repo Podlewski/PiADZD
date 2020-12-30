@@ -1,0 +1,145 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[verbose,a4paper,tmargin=2cm,bmargin=2.33cm,lmargin=2.5cm,rmargin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{lastpage}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks = true,
+    linkcolor = black,
+    urlcolor = cyan
+}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{hyperref} 
+\usepackage{xcolor}
+\usepackage{tikz}
+\frenchspacing
+\pagestyle{fancyplain}
+\fancyhf{}
+
+\usepackage{setspace}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.5pt}
+\newcommand{\degree}{\ensuremath{^{\circ}}} 
+% \fancyfoot[L]{Przetwarzanie i analiza dużych zbiorów danych: }
+% \fancyfoot[R]{\thepage\ / \pageref{LastPage}}
+\fancyfoot[L]{Przetwarzanie i analiza dużych zbiorów danych: \\Aleksandra Kowalczyk, Zbigniew Nowacki, Karol Podlewski}
+\fancyfoot[R]{\\\thepage\ / \pageref{LastPage}}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+
+\begin{tabular}{rcl}
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234073~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Aleksandra Kowalczyk~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+&
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234102~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Zbigniew Nowacki~~~~~~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+&
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234106~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Karol Podlewski~~~~~~~~~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+
+\end{tabular}
+~\\~\\~\\ 
+\end{center}
+\begin{tabular}{ll}
+\LARGE{\textbf{Kierunek}}& \LARGE{Informatyka Stosowana} \\
+\LARGE{\textbf{Stopień}}& \LARGE{II} \\
+\LARGE{\textbf{Specjalizacja}}& \LARGE{Data Science} \\
+\LARGE{\textbf{Semestr}}& \LARGE{2} \\\\
+\LARGE{\textbf{Data oddania}}& \LARGE{16 grudnia 2020} \\\\\\\\\\\\\\
+\end{tabular}
+
+\begin{center}
+\textbf{\Huge{Przetwarzanie i analiza\\}}
+\textbf{\Huge{dużych zbiorów danych\\~\\~\\~}}
+\textbf{\Huge{Prezentacja wstępna\\projektu}}
+\end{center}
+
+\end{titlepage}
+\setcounter{page}{2}
+
+\tableofcontents
+\setstretch{1.5}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TYTUŁ
+
+\section{Nazwa projektu} \label{sec:nazwa}
+
+Projekt jaki zamierzamy wykonać został zatytułowany \textbf{Analiza danych przestępczych w największych miastach Stanów Zjednoczonych}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% GRUPA
+
+\section{Członkowie grupy} \label{sec:grupa}
+Skład grupy:
+\setstretch{1}
+\begin{itemize}
+    \item Aleksandra Kowalczyk, 234073
+    \item Zbigniew Nowacki, 234102
+    \item Karol Podlewski, 234106 (lider)
+\end{itemize}
+\setstretch{1.5}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MOTYWACJA
+
+\section{Motywacja} \label{sec:motywacja}
+
+Motywacją do podjęcia takiej tematyki projektu jest chęć sprawdzenia czy i jakie różnice istnieją w przestępczości pomiędzy badanymi przez nas regionami. Przeprowadzona analiza może przyczynić się do dostrzeżenia przyczyn takich zajść, które wcześniej były niezauważane, bądź pozostawały w sferze domysłów.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CELE PROJEKTU
+
+\section{Cel naukowy oraz dodatkowe cele projektu}
+
+Celem projektu jest przeprowadzenie badania mającego na celu zwiększenie efektywności działań prewencyjnych służb mundurowych oraz efektywniejszego dysponowania środkami na te służby. Wykonanie projektu dodatkowo pozwoli nam na lepsze zrozumienie działania algorytmów oraz wzrost umiejętności pracy z dużymi zbiorami danych, które są wykorzystywane w rzeczywistych warunkach. Projekt powinien się zakończyć wyciągnięciem i przedstawieniem uzyskanych wniosków pod koniec semestru.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ZBIÓR DANYCH
+
+\section{Opis zbiorów danych} \label{sec:dataset}
+
+Dane dotyczące przestępstw będziemy pobierać z otwartych repozytoriów danych miast (między innymi \href{https://opendata.cityofnewyork.us}{NYC Open Data} czy \href{https://data.lacity.org}{Los Angeles Open Data}).
+
+W przypadku chęci rozszerzenia projektu o powiązanie danych przestępczych z danymi demograficznymi, skorzystamy z informacji udostępnianych przez jednostki czy urzędy zbierające dane tego rodzaju (na przykład \href{https://www.census.gov}{Census Bureau}). 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Metody Analizy Danych
+
+\section{Metody Analizy Danych}
+
+Pierwszym krokiem będzie przygotowanie danych do ich zbiorczej analizy -- wyczyszczenie danych, a także przetworzenie kolumn w sposób umożliwiający nam agregację zbiorów. Następnie skupimy się na analizie, która pozwoli na wyłuskanie istotnych informacji, w tym tych, które nie są widoczne na pierwszy rzut oka -- przydatne w tym celu mogą się okazać między innymi reguły asocjacyjne, analiza skupień, klasyfikacja czy analiza statystyczna.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% STOS TECHNOLOGICZNY
+
+\section{Stos technologiczny}
+
+\setstretch{1}
+\begin{itemize}
+    \item Python 3
+    \item Spark 3
+\end{itemize}
+
+\end{document}

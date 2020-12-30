@@ -1,0 +1,153 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[verbose,a4paper,tmargin=2cm,bmargin=2.3cm,lmargin=2.5cm,rmargin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{lastpage}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks = true,
+    linkcolor = black,
+    urlcolor = cyan
+}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{hyperref} 
+\usepackage{booktabs}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{float}
+\frenchspacing
+\pagestyle{fancyplain}
+\fancyhf{}
+
+\usepackage{setspace}
+
+\setlength{\abovecaptionskip}{0pt}
+\setlength{\belowcaptionskip}{3pt}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.5pt}
+\newcommand{\degree}{\ensuremath{^{\circ}}} 
+% \fancyfoot[L]{Przetwarzanie i analiza dużych zbiorów danych: }
+% \fancyfoot[R]{\thepage\ / \pageref{LastPage}}
+\fancyfoot[L]{Przetwarzanie i analiza dużych zbiorów danych: \\Aleksandra Kowalczyk, Zbigniew Nowacki, Karol Podlewski}
+\fancyfoot[R]{\phantom{a} \\ \thepage\ / \pageref{LastPage}}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+
+\begin{tabular}{rcl}
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234073~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Aleksandra Kowalczyk~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+&
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234102~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Zbigniew Nowacki~~~~~~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+&
+\begin{tabular}{|r|}
+\hline \\
+\large{\underline{234106~~~~~~~~~~~~~~~~~~~~~~} }\\
+\small{\textit{Numer indeksu}}\\
+\large{\underline{Karol Podlewski~~~~~~~~~~} }\\
+\small{\textit{Imię i nazwisko}}\\\\ \hline
+\end{tabular} 
+
+\end{tabular}
+~\\~\\~\\ 
+\end{center}
+\begin{tabular}{ll}
+\LARGE{\textbf{Kierunek}}& \LARGE{Informatyka Stosowana} \\
+\LARGE{\textbf{Stopień}}& \LARGE{II} \\
+\LARGE{\textbf{Specjalizacja}}& \LARGE{Data Science} \\
+\LARGE{\textbf{Semestr}}& \LARGE{2} \\\\
+\LARGE{\textbf{Data oddania}}& \LARGE{2 grudnia 2020} \\\\\\\\\\\\\\
+\end{tabular}
+
+\begin{center}
+\textbf{\Huge{Przetwarzanie i analiza\\}}
+\textbf{\Huge{dużych zbiorów danych\\~\\~\\~}}
+\textbf{\Huge{Zadanie 4}}
+\end{center}
+
+\end{titlepage}
+
+\setcounter{page}{2}
+
+\setstretch{1.4}
+\newpage
+\section{Cel zadania}
+    Celem zadania było stworzenie programu, który implementuje reguły asocjacyjne za pomocą algorytmu A-priori. Program powinien -- na podstawie ostatnio przeglądanych przez użytkowników przedmiotów -- identyfikować wszystkie pary i trójki przedmiotów, które wystąpiły wspólnie w ramach pojedynczej sesji co najmniej 100 razy, a następnie obliczyć ufność dla stworzonych reguł asocjacyjnych.
+    
+    Miary istotności:
+    \begin{equation}
+        \text{wsparcie: } supp(X) = \cfrac{|\{t \in T: X \subseteq t\}|}{|T|}
+    \end{equation}
+    \begin{equation}
+        \text{ufność: } conf(X \Rightarrow Y) = \cfrac{supp(X \cup Y)}{supp(X)}
+    \end{equation}
+    Gdzie $X$ i $Y$ to zbiory elementów transakcji, $t$ oznacza transakcję, a $T$ jest zbiorem transakcji.
+
+\section{Opis implementacji}
+    Do zaimplementowania zadania wykorzystano język Python 3 oraz API PySpark pozwalające wykorzystać możliwości Apache Spark w pythonowym kodzie. Wszystkie funkcje zostały zaimplementowane w programie, nie korzystano z zewnętrznych bibliotek.
+
+\section{Uzyskane wyniki}
+    Pełne wyniki zostały przedstawione w plikach \texttt{result\_doubles.txt} oraz \texttt{result\_triples.txt}. Wyniki zostały posortowane malejąco po poziomie ufności oraz leksykograficznie rosnąco.
+    
+    5 reguł o największym współczynniku ufności zostało przedstawionych w tabelach \ref{tab:dubs} i \ref{tab:trips}.
+    % Czas - 20 sekund
+
+    \begin{table}[H]
+        \centering
+        \caption{Reguły asocjacyjne dla dwójek z najwyższym stopniem zaufania}
+        \label{tab:dubs}
+        \begin{tabular}{@{}llc@{}}
+            \toprule
+            \multicolumn{1}{c}{Poprzednik} & \multicolumn{1}{c}{Następnik} & Zaufanie          \\ \midrule
+            DAI93865   & FRO40251  & 1,0               \\
+            GRO85051   & FRO40251  & 0,999176276771005 \\
+            GRO38636   & FRO40251  & 0,990654205607477 \\
+            ELE12951   & FRO40251  & 0,990566037735849 \\
+            DAI88079   & FRO40251  & 0,986725663716814 \\ \bottomrule
+        \end{tabular}
+    \end{table}
+
+    \begin{table}[H]
+        \centering
+        \caption{Reguły asocjacyjne dla trójek z najwyższym stopniem zaufania}
+        \label{tab:trips}
+        \begin{tabular}{@{}lllc@{}}
+            \toprule
+            \multicolumn{2}{c}{Poprzednik} & \multicolumn{1}{c}{Następnik} & Zaufanie   \\ \midrule
+            DAI23334       & ELE92920      & DAI62779  & 1,0        \\ 
+            DAI31081       & GRO85051      & FRO40251  & 1,0        \\ 
+            DAI55911       & GRO85051      & FRO40251  & 1,0        \\ 
+            DAI62779       & DAI88079      & FRO40251  & 1,0        \\ 
+            DAI75645       & GRO85051      & FRO40251  & 1,0        \\ \bottomrule
+        \end{tabular}
+    \end{table}
+
+\section{Analiza wyników}
+    \begin{itemize}
+        \item Produkt o identyfikatorze \texttt{FRO40251} pojawia się we wszystkich regułach asocjacyjnych o~wysokiej ufności dla dwójek oraz w 4 na 5 reguł dla trójek.
+        \item Trójki przedmiotów posiadają więcej reguł o wysokiej ufności -- dla dwójek jej wartość spada o wiele szybciej pomimo ogólnie większej (co widoczne jest w plikach) liczby reguł.
+    \end{itemize}
+
+\end{document}
