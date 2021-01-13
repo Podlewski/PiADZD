@@ -37,6 +37,13 @@ def assign_race(row):
         return 'UNKNOWN'
 
 
+def merge_hispanic(row):
+    if row in ['WHITE HISPANIC', 'BLACK HISPANIC']:
+        return 'HISPANIC'
+    else:
+        return row
+
+
 # NEW YORK ####################################################################
 dfny = pandas.read_csv(
     'data/NYPD_Complaint_Data_Historic.csv',
@@ -64,6 +71,8 @@ dfny['VIC_AGE_GROUP'] = dfny['VIC_AGE_GROUP'].apply(clean_age_groups)
 # Suspect/Victim Race = SUSP_RACE, VIC_RACE
 dfny['SUSP_RACE'].fillna('UNKNOWN', inplace=True)
 dfny['VIC_RACE'].fillna('UNKNOWN', inplace=True)
+dfny['SUSP_RACE'] = dfny['SUSP_RACE'].apply(merge_hispanic)
+dfny['VIC_RACE'] = dfny['VIC_RACE'].apply(merge_hispanic)
 #
 dfny.rename({'PD_CD': 'Crime Code',
              'PD_DESC': 'Crime Description',
@@ -126,11 +135,11 @@ dfla.rename({'DATE OCC': 'Date',
              'Premis Desc': 'Location Type',
              'AREA NAME': 'Area'}, axis=1, inplace=True)
 dfla = dfla[['Date', 'Crime Code', 'Crime Description', 'Victim Age Group', 'Victim Sex', 'Victim Race',
-             'Area', 'Location Type']]
+             'Location Type', 'Area']]
 print('\tLA')
 print(dfla.iloc[:, :].sample(5).to_string())
 
-#####
-print(dfny['Suspect Race'].unique())
-print(dfny['Victim Race'].unique())
-print(dfla['Victim Race'].unique())
+# SAVE ########################################################################
+dfny.to_csv('data/dfny.csv')
+dfch.to_csv('data/dfch.csv')
+dfla.to_csv('data/dfla.csv')
