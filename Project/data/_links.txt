@@ -29,4 +29,7 @@ San Diego
 Dallas
 --- nie działa portal Open Data :) ---
 
+San Jose
+--- brak porównywalnych danych ---
+
 ... dalej mi się już nie chciało
