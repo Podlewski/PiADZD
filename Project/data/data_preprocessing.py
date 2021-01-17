@@ -24,6 +24,7 @@ def preporcess_chicago():
     df = df[['Date', 'Crime Code', 'Crime Category', 'Local Crime Code',
              'Crime Description', 'Location Type', 'Arrest']]
     
+    df['Location Type'] = df['Location Type'].apply(cut_location_types_ch)
     print('CHICAGO:')
     print(df.iloc[:, :].sample(15))
     df.to_csv('dfch.csv', index=False) 
@@ -61,6 +62,7 @@ def preporcess_los_angeles():
              'Crime Description', 'Victim Age Group', 'Victim Sex',
              'Victim Race', 'Location Type', 'Area']]
     
+    df['Location Type'] = df['Location Type'].apply(cut_location_types_la)
     print('\nLOS ANGELES:')
     print(df.iloc[:, :].sample(15))
     df.to_csv('dfla.csv', index=False) 
@@ -113,6 +115,7 @@ def preprocess_new_york():
              'Suspect Race', 'Victim Age Group', 'Victim Sex', 'Victim Race',
              'Location Type', 'Area']]
     
+    df['Location Type'] = df['Location Type'].apply(cut_location_types_ny)
     print('\nNew York')
     print(df.iloc[:, :].sample(15))
     df.to_csv('dfny.csv', index=False) 

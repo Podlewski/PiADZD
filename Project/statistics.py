@@ -7,25 +7,30 @@ sns.set_theme(style="darkgrid")
 
 
 def get_most_common_crimes(df, city):
-    crimes = df.groupBy('Crime Description').count().sort(
-        desc('count')).limit(10)
+    crimes = df.groupBy('Crime Category').count().withColumnRenamed('count', 'Number of crimes').sort(
+        desc('Number of crimes')).limit(10)
 
-    sns.barplot(y='Crime Description', x='count', data=crimes.toPandas())
+    ax = sns.barplot(y='Crime Category', x='Number of crimes',
+                     data=crimes.toPandas())
     plt.title('Most common crimes - ' + city)
+    ax.set_yticklabels(ax.get_ymajorticklabels(), fontsize=8)
     plt.show()
 
 
 def get_most_common_locations(df, city):
-    locations = df.groupBy('Location Type').count().sort(
-        desc('count')).limit(10)
+    locations = df.groupBy('Location Type').count().withColumnRenamed('count', 'Number of crimes').sort(
+        desc('Number of crimes')).limit(10)
 
-    sns.barplot(y='Location Type', x='count', data=locations.toPandas())
+    ax = sns.barplot(y='Location Type', x='Number of crimes',
+                     data=locations.toPandas())
     plt.title('Most common crime locations - ' + city)
+    ax.set_yticklabels(ax.get_ymajorticklabels(), fontsize=8)
     plt.show()
 
 
 def get_victim_age(df1, df2, cols):
-    df = df1.union(df2).groupBy(cols).count().replace('<18', '0-18')
+    df = df1.union(df2).groupBy(cols).count().withColumnRenamed(
+        'count', 'Number of crimes').replace('<18', '0-18')
     df = df.filter(col('Victim Age Group') !=
                    'UNKNOWN').orderBy('Victim Age Group')
     return df.replace('0-18', '<18')
@@ -48,11 +53,11 @@ def get_victim_sex_plot(df, title):
 def get_victim_sex(df, title):
     victim_sex = df.filter(col('Victim Sex') != 'U')
 
-    sexual_crimes = victim_sex.filter(col('Crime Description').contains(
-        'SEXUAL')).groupBy('Victim Sex').count()
+    sexual_crimes = victim_sex.filter(col('Crime Category').contains(
+        'SEX') | col('Crime Category').contains('RAPE')).groupBy('Victim Sex').count()
 
-    other_crimes = victim_sex.filter(~col('Crime Description').contains(
-        'SEXUAL')).groupBy('Victim Sex').count()
+    other_crimes = victim_sex.filter(~col('Crime Category').contains(
+        'SEX') & ~col('Crime Category').contains('RAPE')).groupBy('Victim Sex').count()
 
     get_victim_sex_plot(sexual_crimes.toPandas(),
                         'Sexual Crimes - ' + title)
@@ -76,7 +81,7 @@ def main():
     get_most_common_locations(df_ch, 'Chicago')
     get_most_common_locations(df_la, 'Los Angeles')
 
-    cols = ['Crime Description', 'Location Type']
+    cols = ['Crime Category', 'Location Type']
 
     df_ny_ch = df_ny.select(*cols).union(df_ch.select(*cols))
     df_all = df_ny_ch.union(df_la.select(*cols))
@@ -90,14 +95,15 @@ def main():
     la_age = df_la.select(*cols_age).withColumn('City', lit('Los Angeles'))
 
     age_data = get_victim_age(ny_age, la_age, 'Victim Age Group')
-    sns.barplot(x='Victim Age Group', y='count', data=age_data.toPandas())
+    sns.barplot(x='Victim Age Group', y='Number of crimes',
+                data=age_data.toPandas())
     plt.title('Victim Age Group - All')
     plt.show()
 
     age_data_all = get_victim_age(
         ny_age, la_age, ['Victim Age Group', 'City'])
 
-    sns.barplot(x='City', y='count', data=age_data_all.toPandas(),
+    sns.barplot(x='City', y='Number of crimes', data=age_data_all.toPandas(),
                 hue='Victim Age Group')
     plt.title('Victim Age Group - NY & LA')
     plt.show()
@@ -105,11 +111,11 @@ def main():
     # SUSPECT SEX - NEW YORK - SEXUAL AND OTHER CRIMES
 
     suspect_sex_ny = df_ny.filter(col('Suspect Sex') != 'U')
-    sexual_crimes = suspect_sex_ny.filter(col('Crime Description').contains(
-        'SEXUAL')).groupBy('Suspect Sex').count()
+    sexual_crimes = suspect_sex_ny.filter(col('Crime Category').contains(
+        'SEX') | col('Crime Category').contains('RAPE')).groupBy('Suspect Sex').count()
 
-    other_crimes = suspect_sex_ny.filter(~col('Crime Description').contains(
-        'SEXUAL')).groupBy('Suspect Sex').count()
+    other_crimes = suspect_sex_ny.filter(~col('Crime Category').contains(
+        'SEX') & ~col('Crime Category').contains('RAPE')).groupBy('Suspect Sex').count()
 
     get_suspect_sex_plot(sexual_crimes.toPandas(), 'Sexual Crimes - New York')
     get_suspect_sex_plot(other_crimes.toPandas(), 'Other Crimes - New York')
@@ -119,7 +125,7 @@ def main():
     get_victim_sex(df_ny, 'New York')
     get_victim_sex(df_la, 'Los Angeles')
 
-    cols = ['Crime Description', 'Victim Sex']
+    cols = ['Crime Category', 'Victim Sex']
     df_ny_la = df_ny.select(*cols).union(df_la.select(*cols))
     get_victim_sex(df_ny_la, 'All')
 
