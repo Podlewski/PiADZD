@@ -115,3 +115,32 @@ def translate_nibric_codes(row):
         return 'OTHER'
     else:
         return 'OTHER'
+
+
+def cut_location_types_ny(row):
+    if row == 'RESIDENCE - APT. HOUSE':
+        return 'APT. HOUSE'
+    elif row == 'RESIDENCE-HOUSE':
+        return 'HOUSE'
+    elif row == 'RESIDENCE - PUBLIC HOUSING':
+        return 'PUBLIC HOUSING'
+    else:
+        return row
+
+
+def cut_location_types_ch(row):
+    if row == 'PARKING LOT/GARAGE(NON.RESID.)':
+        return 'PARKING LOT/GARAGE'
+    elif row == 'RESIDENTIAL YARD (FRONT/BACK)':
+        return 'RESIDENTIAL YARD'
+    else:
+        return row
+
+
+def cut_location_types_la(row):
+    if row == 'MULTI-UNIT DWELLING (APARTMENT, DUPLEX, ETC)':
+        return 'MULTI-UNIT DWELLING'
+    elif row == 'VEHICLE, PASSENGER/TRUCK':
+        return 'VEHICLE'
+    else:
+        return row
