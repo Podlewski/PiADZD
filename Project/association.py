@@ -5,10 +5,8 @@ from typing import List
 
 from pyspark.ml.fpm import FPGrowth
 from pyspark.sql import SparkSession
-from pyspark.sql.dataframe import DataFrame
-from pyspark.sql.functions import array
-import pyspark.sql.functions as funcs
-from pyspark.sql.types import Row, StringType
+from pyspark.sql.functions import array, col
+from pyspark.sql.types import Row, StringType, DoubleType, ArrayType
 from pyspark.sql.udf import UserDefinedFunction
 
 
@@ -27,65 +25,93 @@ def print_result(result: List[Row], source_shape: (int, int)) -> None:
             print(f'{list_to_string(r["items"])}; supp={support}')
 
 
+def printer() -> None:
+    print('\n#################################### NEW YORK ###################################')
+    resny.associationRules.orderBy('confidence', ascending=False).show(resny.associationRules.count(), False)
+    resny.freqItemsets.withColumn(
+        'support', ny_supp(col('freq').cast(DoubleType()), col('items').cast(ArrayType(StringType())))
+    ).orderBy('freq', ascending=False).show(resny.freqItemsets.count(), False)
+    print('\n#################################### CHICAGO ####################################')
+    resch.associationRules.orderBy('confidence', ascending=False).show(resch.associationRules.count(), False)
+    resch.freqItemsets.withColumn(
+        'support', ch_supp(col('freq').cast(DoubleType()), col('items').cast(ArrayType(StringType())))
+    ).orderBy('freq', ascending=False).show(resch.freqItemsets.count(), False)
+    print('\n################################## LOS ANGELES ##################################')
+    resla.associationRules.orderBy('confidence', ascending=False).show(resla.associationRules.count(), False)
+    resla.freqItemsets.withColumn(
+        'support', la_supp(col('freq').cast(DoubleType()), col('items').cast(ArrayType(StringType())))
+    ).orderBy('freq', ascending=False).show(resla.freqItemsets.count(), False)
+
+
 def list_to_string(list_: list) -> str:
     return f'[{", ".join(x for x in list_)}]'
 
 
-def get_shape(df: DataFrame) -> (int, int):
-    return df.count(), len(df.columns)
-
-
-def contains(x, y):
-    return y if len(set(x) - set(y)) == 0 else None
-
-
 # SETUP #######################################################################
 ss = SparkSession.builder.getOrCreate()
-fpm = FPGrowth(itemsCol='features', minSupport=0.1, minConfidence=0.5)
+fpm = FPGrowth(itemsCol='features', minSupport=0.15, minConfidence=0.5)
 a__prefix = UserDefinedFunction(lambda x: 'a_' + x, StringType())
-s__prefix = UserDefinedFunction(lambda x: 's_' + x, StringType())
+c__prefix = UserDefinedFunction(lambda x: 'c_' + x, StringType())
+l__prefix = UserDefinedFunction(lambda x: 'l_' + x, StringType())
 r__prefix = UserDefinedFunction(lambda x: 'r_' + x, StringType())
-v_prefix = UserDefinedFunction(lambda x: 'v' + x, StringType())
+s__prefix = UserDefinedFunction(lambda x: 's_' + x, StringType())
 s_prefix = UserDefinedFunction(lambda x: 's' + x, StringType())
+v_prefix = UserDefinedFunction(lambda x: 'v' + x, StringType())
 
 # NEW YORK ####################################################################
 data = ss.read.csv('data/dfny.csv', header=True, inferSchema=True)
 dfny = data.toDF(*data.columns)
 del data
-for col in ['Suspect Age Group', 'Victim Age Group']:
-    dfny = dfny.withColumn(col, a__prefix(dfny[col]))
-for col in ['Suspect Sex', 'Victim Sex']:
-    dfny = dfny.withColumn(col, s__prefix(dfny[col]))
-for col in ['Suspect Race', 'Victim Race']:
-    dfny = dfny.withColumn(col, r__prefix(dfny[col]))
-for col in ['Suspect Age Group', 'Suspect Sex', 'Suspect Race']:
-    dfny = dfny.withColumn(col, s_prefix(dfny[col]))
-for col in ['Victim Age Group', 'Victim Sex', 'Victim Race']:
-    dfny = dfny.withColumn(col, v_prefix(dfny[col]))
+dfny = dfny.withColumn('Crime Category', c__prefix(dfny['Crime Category']))
+dfny = dfny.withColumn('Location Type', l__prefix(dfny['Location Type']))
+for c in ['Suspect Age Group', 'Victim Age Group']:
+    dfny = dfny.withColumn(c, a__prefix(dfny[c]))
+for c in ['Suspect Sex', 'Victim Sex']:
+    dfny = dfny.withColumn(c, s__prefix(dfny[c]))
+for c in ['Suspect Race', 'Victim Race']:
+    dfny = dfny.withColumn(c, r__prefix(dfny[c]))
+for c in ['Suspect Age Group', 'Suspect Sex', 'Suspect Race']:
+    dfny = dfny.withColumn(c, s_prefix(dfny[c]))
+for c in ['Victim Age Group', 'Victim Sex', 'Victim Race']:
+    dfny = dfny.withColumn(c, v_prefix(dfny[c]))
 dfny = dfny.withColumn(
-    'features', array(*list(set(dfny.columns) - {'Date', 'Crime Description'}))
+    'features', array(*list(set(dfny.columns) - {'Date', 'Crime Code', 'Local Crime Code', 'Crime Description'}))
 ).select('features')
 
 # CHICAGO #####################################################################
 data = ss.read.csv('data/dfch.csv', header=True, inferSchema=True)
 dfch = data.toDF(*data.columns)
 del data
+dfch = dfch.withColumn('Crime Category', c__prefix(dfch['Crime Category']))
+dfch = dfch.withColumn('Location Type', l__prefix(dfch['Location Type']))
+dfch = dfch.withColumn('Arrest', dfch['Arrest'].cast(StringType()))
 dfch = dfch.withColumn(
-    'features', array(*list(set(dfch.columns) - {'Date', 'Crime Details', 'Crime Description'}))
+    'features', array(*list(set(dfch.columns) - {'Date', 'Crime Code', 'Local Crime Code', 'Crime Description'}))
 ).select('features')
 
 # LOS ANGELES #################################################################
 data = ss.read.csv('data/dfla.csv', header=True, inferSchema=True)
 dfla = data.toDF(*data.columns)
 del data
+dfla = dfla.withColumn('Crime Category', c__prefix(dfla['Crime Category']))
 dfla = dfla.withColumn('Victim Age Group', a__prefix(dfla['Victim Age Group']))
 dfla = dfla.withColumn('Victim Sex', s__prefix(dfla['Victim Sex']))
 dfla = dfla.withColumn('Victim Race', r__prefix(dfla['Victim Race']))
+dfla = dfla.withColumn('Location Type', l__prefix(dfla['Location Type']))
+for c in ['Victim Age Group', 'Victim Sex', 'Victim Race']:
+    dfla = dfla.withColumn(c, v_prefix(dfla[c]))
 dfla = dfla.withColumn(
-    'features', array(*list(set(dfla.columns) - {'Date', 'Crime Description'}))
+    'features', array(*list(set(dfla.columns) - {'Date', 'Crime Code', 'Local Crime Code', 'Crime Description'}))
 ).select('features')
 
 # CALCULATIONS ################################################################
+dfny_len = dfny.count()
+dfch_len = dfch.count()
+dfla_len = dfla.count()
+ny_supp = UserDefinedFunction(lambda x, y: x / dfny_len if len(y) == 1 else '-', StringType())
+ch_supp = UserDefinedFunction(lambda x, y: x / dfch_len if len(y) == 1 else '-', StringType())
+la_supp = UserDefinedFunction(lambda x, y: x / dfla_len if len(y) == 1 else '-', StringType())
+
 resny = fpm.fit(dfny)
 del dfny
 resch = fpm.fit(dfch)
@@ -97,22 +123,4 @@ del dfla
 clear_output()
 with open('result_FPGrowth.txt', 'w') as file:
     with redirect_stdout(file):
-        print('\n###### NEW YORK #####')
-        resny.associationRules.show(resny.associationRules.count(), False)
-        resny.freqItemsets.show(resny.freqItemsets.count(), False)
-        print('\n###### CHICAGO ######')
-        resch.associationRules.show(resch.associationRules.count(), False)
-        resch.freqItemsets.show(resch.freqItemsets.count(), False)
-        print('\n#### LOS ANGELES ####')
-        resla.associationRules.show(resla.associationRules.count(), False)
-        resla.freqItemsets.show(resla.freqItemsets.count(), False)
-
-print('\n###### NEW YORK #####')
-resny.associationRules.show(resny.associationRules.count(), False)
-resny.freqItemsets.show(resny.freqItemsets.count(), False)
-print('\n###### CHICAGO ######')
-resch.associationRules.show(resch.associationRules.count(), False)
-resch.freqItemsets.show(resch.freqItemsets.count(), False)
-print('\n#### LOS ANGELES ####')
-resla.associationRules.show(resla.associationRules.count(), False)
-resla.freqItemsets.show(resla.freqItemsets.count(), False)
+        printer()
