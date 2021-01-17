@@ -56,33 +56,21 @@ def reduce_nibris_code_chichago(row):
         return 0
     elif row == '01B':
         return 1
-    # elif row == '02':
-    #     return 2
-    # elif row == '03':
-    #     return 3
     elif row == '04A' or row == '04B':
         return 4
-    # elif row == '05':
-    #     return 5
-    # elif row == '06':
-    #     return 6
-    # elif row == '07':
-    #     return 7
     elif row == '08A' or row == '08B':
         return 8
-    # elif row == '09':
-    #     return 9
     else:
         return int(row)
 
 
 def translate_nibric_codes(row):
     if row == 0:
-        return 'HOMICODE'
+        return 'MANSLAUGHTER'
     elif row == 1:
         return 'INVOLUNTARY MANSLAUGHTER'
     elif row == 2:
-        return 'CRIMINAL SEXUAL ASSAULT'
+        return 'SEXUAL ASSAULT'
     elif row == 3:
         return 'ROBBERY'
     elif row == 4:
@@ -90,7 +78,7 @@ def translate_nibric_codes(row):
     elif row == 5:
         return 'BURGLARY'
     elif row == 6:
-        return 'LARCENY'
+        return 'THEFT'
     elif row == 7:
         return 'MOTOR VEHICLE THEFT'
     elif row == 8:
@@ -112,7 +100,7 @@ def translate_nibric_codes(row):
     elif row == 16:
         return 'PROSTITUTION'
     elif row == 17:
-        return 'CRIMINAL SEXUAL ABUSE'
+        return 'SEXUAL ABUSE'
     elif row == 18:
         return 'DRUG ABUSE'
     elif row == 19:
