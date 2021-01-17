@@ -10,9 +10,10 @@ def get_most_common_crimes(df, city):
     crimes = df.groupBy('Crime Category').count().withColumnRenamed('count', 'Number of crimes').sort(
         desc('Number of crimes')).limit(10)
 
-    sns.barplot(y='Crime Category', x='Number of crimes',
-                data=crimes.toPandas())
+    ax = sns.barplot(y='Crime Category', x='Number of crimes',
+                     data=crimes.toPandas())
     plt.title('Most common crimes - ' + city)
+    ax.set_yticklabels(ax.get_ymajorticklabels(), fontsize=8)
     plt.show()
 
 
@@ -20,9 +21,10 @@ def get_most_common_locations(df, city):
     locations = df.groupBy('Location Type').count().withColumnRenamed('count', 'Number of crimes').sort(
         desc('Number of crimes')).limit(10)
 
-    sns.barplot(y='Location Type', x='Number of crimes',
-                data=locations.toPandas())
+    ax = sns.barplot(y='Location Type', x='Number of crimes',
+                     data=locations.toPandas())
     plt.title('Most common crime locations - ' + city)
+    ax.set_yticklabels(ax.get_ymajorticklabels(), fontsize=8)
     plt.show()
 
 
