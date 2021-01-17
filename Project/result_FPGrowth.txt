@@ -1,47 +1,455 @@
 
 ###### NEW YORK #####
-Row(items=['va_25-44', 'vs_F'], freq=1276441)
-Row(items=['va_25-44', 'sr_UNKNOWN'], freq=1263659)
-Row(items=['va_25-44', 'sr_UNKNOWN', 'sa_UNKNOWN'], freq=1231045)
-Row(items=['va_25-44', 'ss_U'], freq=1176398)
-Row(items=['va_25-44', 'ss_U', 'sr_UNKNOWN'], freq=1149673)
-Row(items=['va_25-44', 'ss_U', 'sr_UNKNOWN', 'sa_UNKNOWN'], freq=1148430)
-Row(items=['va_25-44', 'ss_U', 'sa_UNKNOWN'], freq=1168606)
-Row(items=['va_25-44', 'sa_UNKNOWN'], freq=1620952)
-Row(items=['sr_UNKNOWN', 'sa_UNKNOWN'], freq=2724068)
-Row(items=['ss_M', 'vs_F'], freq=1061000)
-Row(items=['vs_F', 'sr_UNKNOWN'], freq=1366687)
-Row(items=['vs_F', 'sr_UNKNOWN', 'sa_UNKNOWN'], freq=1317497)
-Row(items=['vs_F', 'sa_UNKNOWN'], freq=1797254)
-Row(items=['vr_BLACK', 'vs_F'], freq=1001532)
-Row(items=['vr_BLACK', 'sa_UNKNOWN'], freq=1127480)
-Row(items=['BROOKLYN', 'sa_UNKNOWN'], freq=1133692)
-Row(items=['ss_U', 'vs_F'], freq=1247251)
-Row(items=['ss_U', 'vs_F', 'sr_UNKNOWN'], freq=1217549)
-Row(items=['ss_U', 'vs_F', 'sr_UNKNOWN', 'sa_UNKNOWN'], freq=1215790)
-Row(items=['ss_U', 'vs_F', 'sa_UNKNOWN'], freq=1237414)
-Row(items=['ss_U', 'sr_UNKNOWN'], freq=2527084)
-Row(items=['ss_U', 'sr_UNKNOWN', 'sa_UNKNOWN'], freq=2524047)
-Row(items=['ss_U', 'sa_UNKNOWN'], freq=2573466)
-Row(items=['vs_M', 'sr_UNKNOWN'], freq=1427681)
-Row(items=['vs_M', 'sr_UNKNOWN', 'sa_UNKNOWN'], freq=1406306)
-Row(items=['vs_M', 'ss_U'], freq=1343633)
-Row(items=['vs_M', 'ss_U', 'sr_UNKNOWN'], freq=1309272)
-Row(items=['vs_M', 'ss_U', 'sr_UNKNOWN', 'sa_UNKNOWN'], freq=1307994)
-Row(items=['vs_M', 'ss_U', 'sa_UNKNOWN'], freq=1335787)
-Row(items=['vs_M', 'sa_UNKNOWN'], freq=1854888)
++-------------------------------------------------------+------------+------------------+------------------+
+|antecedent                                             |consequent  |confidence        |lift              |
++-------------------------------------------------------+------------+------------------+------------------+
+|[sr_UNKNOWN]                                           |[sa_UNKNOWN]|0.974749466298628 |1.3332071696711527|
+|[sr_UNKNOWN]                                           |[ss_U]      |0.9042629553637436|1.7433658378367574|
+|[sr_UNKNOWN]                                           |[vs_M]      |0.5108651079175305|1.1217511188223956|
+|[va_25-44, ss_U, sr_UNKNOWN, sa_UNKNOWN]               |[vs_M]      |0.514276011598443 |1.129240737825455 |
+|[MANHATTAN, sr_UNKNOWN]                                |[sa_UNKNOWN]|0.9789318851862724|1.3389276455886714|
+|[MANHATTAN, sr_UNKNOWN]                                |[ss_U]      |0.9094753870304902|1.7534150997754034|
+|[QUEENS, ss_U, sa_UNKNOWN]                             |[sr_UNKNOWN]|0.984235679779158 |1.7593828135985627|
+|[MANHATTAN, ss_U, sa_UNKNOWN]                          |[sr_UNKNOWN]|0.9787904104738034|1.7496490542682708|
+|[BRONX]                                                |[vs_F]      |0.5753744520649002|1.0566615805344204|
+|[BRONX]                                                |[sr_UNKNOWN]|0.5236693684646394|0.9360917367793739|
+|[BRONX]                                                |[sa_UNKNOWN]|0.6894972561599566|0.9430553359230245|
+|[vr_WHITE]                                             |[vs_M]      |0.5043134687770322|1.107365112767034 |
+|[vr_WHITE]                                             |[sr_UNKNOWN]|0.6538562377467761|1.168808905113068 |
+|[vr_WHITE]                                             |[ss_U]      |0.6199171039140179|1.1951637461690165|
+|[vr_WHITE]                                             |[sa_UNKNOWN]|0.8068908623931652|1.103619668518121 |
+|[va_25-44, vs_M, sr_UNKNOWN]                           |[sa_UNKNOWN]|0.9859703794787076|1.3485544998510253|
+|[va_25-44, vs_M, sr_UNKNOWN]                           |[ss_U]      |0.924734715332304 |1.782834188008446 |
+|[MANHATTAN, sr_UNKNOWN, sa_UNKNOWN]                    |[ss_U]      |0.9279062869733287|1.788948791751104 |
+|[va_25-44, vs_M, ss_U, sa_UNKNOWN]                     |[sr_UNKNOWN]|0.981611304460555 |1.7546915786364057|
+|[INSIDE RESIDENCE - APT. HOUSE, ss_U, sa_UNKNOWN]      |[sr_UNKNOWN]|0.9860372171417063|1.762603174269123 |
+|[vr_WHITE, vs_M]                                       |[sa_UNKNOWN]|0.8526560130333716|1.1662146522181798|
+|[vr_WHITE, ss_U, sr_UNKNOWN]                           |[sa_UNKNOWN]|0.9993229008899605|1.3668173231652738|
+|[QUEENS]                                               |[vs_F]      |0.5209453415389858|0.9567038056471403|
+|[QUEENS]                                               |[sr_UNKNOWN]|0.5808912997983158|1.0383795166452456|
+|[QUEENS]                                               |[ss_U]      |0.5397747581733966|1.0406540132428241|
+|[QUEENS]                                               |[sa_UNKNOWN]|0.7385402062772131|1.010133508293236 |
+|[va_25-44, vs_F, sa_UNKNOWN]                           |[sr_UNKNOWN]|0.7420132126108925|1.3263950093981394|
+|[va_25-44, vs_F, sa_UNKNOWN]                           |[ss_U]      |0.7001918039326599|1.3499286503652737|
+|[va_25-44, vs_M, sr_UNKNOWN, sa_UNKNOWN]               |[ss_U]      |0.9371028368062883|1.8066791993826936|
+|[INSIDE RESIDENCE - APT. HOUSE, ss_U, sr_UNKNOWN]      |[sa_UNKNOWN]|0.9983429909705875|1.3654770578198607|
+|[vs_M, ss_U, sa_UNKNOWN]                               |[sr_UNKNOWN]|0.9791935390896902|1.7503696718734159|
+|[vr_WHITE, ss_U, sa_UNKNOWN]                           |[sr_UNKNOWN]|0.9865592634590039|1.7635363647004656|
+|[va_25-44]                                             |[vs_F]      |0.562281811137703 |1.0326172549550474|
+|[va_25-44]                                             |[sr_UNKNOWN]|0.5566512444997135|0.9950489022718582|
+|[va_25-44]                                             |[ss_U]      |0.5182121210919828|0.9990825161042651|
+|[va_25-44]                                             |[sa_UNKNOWN]|0.7140414843516325|0.9766255425561637|
+|[va_45-64, ss_U, sr_UNKNOWN]                           |[sa_UNKNOWN]|0.9990137523354468|1.3663944872637204|
+|[QUEENS, ss_U]                                         |[sr_UNKNOWN]|0.9796776838804199|1.751235110956354 |
+|[QUEENS, ss_U]                                         |[sa_UNKNOWN]|0.9943284165886095|1.3599861501207213|
+|[va_45-64, ss_U]                                       |[sr_UNKNOWN]|0.9787222561962661|1.749527224236058 |
+|[va_45-64, ss_U]                                       |[sa_UNKNOWN]|0.9940390541626197|1.3595903765662838|
+|[va_25-44, vs_F, sr_UNKNOWN, sa_UNKNOWN]               |[ss_U]      |0.9284713229492971|1.7900381479077498|
+|[BRONX, sr_UNKNOWN]                                    |[sa_UNKNOWN]|0.9636324307031209|1.3180019173741704|
+|[vr_BLACK, sr_UNKNOWN]                                 |[sa_UNKNOWN]|0.9748821971247031|1.3333887113852831|
+|[vr_BLACK, sr_UNKNOWN]                                 |[ss_U]      |0.9049331408954244|1.744657916157576 |
+|[vs_F]                                                 |[sr_UNKNOWN]|0.502421513124035 |0.8981098669080482|
+|[vs_F]                                                 |[sa_UNKNOWN]|0.660706565693699 |0.9036770584512233|
+|[QUEENS, sa_UNKNOWN]                                   |[sr_UNKNOWN]|0.7680846688750855|1.3729993674996464|
+|[QUEENS, sa_UNKNOWN]                                   |[ss_U]      |0.7267219523693693|1.4010772174750394|
+|[vs_F, sa_UNKNOWN]                                     |[sr_UNKNOWN]|0.7330611032163512|1.3103925541551593|
+|[vs_F, sa_UNKNOWN]                                     |[ss_U]      |0.6885025711446462|1.3273924964818637|
+|[vr_BLACK, ss_U]                                       |[sr_UNKNOWN]|0.9719163147762397|1.7373611784293872|
+|[vr_BLACK, ss_U]                                       |[sa_UNKNOWN]|0.9920059793958231|1.3568096519295592|
+|[va_25-44, vs_F]                                       |[sa_UNKNOWN]|0.6343270076721134|0.8675965915178261|
+|[va_25-44, sr_UNKNOWN, sa_UNKNOWN]                     |[vs_M]      |0.5119642255157204|1.1241645472918262|
+|[va_25-44, sr_UNKNOWN, sa_UNKNOWN]                     |[ss_U]      |0.9328903492561198|1.7985577709378868|
+|[ss_U]                                                 |[sr_UNKNOWN]|0.9752754473015639|1.7433658378367574|
+|[ss_U]                                                 |[sa_UNKNOWN]|0.9931756143703044|1.358409412470899 |
+|[ss_U]                                                 |[vs_M]      |0.5185471773332988|1.1386193093260237|
+|[vr_HISPANIC, ss_U]                                    |[sr_UNKNOWN]|0.9714003330666884|1.7364388288635602|
+|[vr_HISPANIC, ss_U]                                    |[sa_UNKNOWN]|0.9921571257270865|1.3570163813297558|
+|[va_25-44, sr_UNKNOWN]                                 |[vs_M]      |0.5058477010016151|1.110733960409565 |
+|[va_25-44, sr_UNKNOWN]                                 |[sa_UNKNOWN]|0.9741908220493029|1.3324430876744484|
+|[va_25-44, sr_UNKNOWN]                                 |[ss_U]      |0.9097968676676224|1.7540348955515963|
+|[BROOKLYN, ss_U]                                       |[sr_UNKNOWN]|0.9748510654308755|1.7426072287098666|
+|[BROOKLYN, ss_U]                                       |[sa_UNKNOWN]|0.9932098378337703|1.358456221387899 |
+|[sa_25-44]                                             |[vs_F]      |0.7028648399206775|1.290794664217873 |
+|[sa_25-44]                                             |[ss_M]      |0.7528751640426767|2.1092761878827924|
+|[MANHATTAN, sa_UNKNOWN]                                |[sr_UNKNOWN]|0.7496393016440026|1.3400271203401417|
+|[MANHATTAN, sa_UNKNOWN]                                |[ss_U]      |0.7106679974735844|1.370126135866012 |
+|[QUEENS, sr_UNKNOWN]                                   |[sa_UNKNOWN]|0.9765362469472731|1.33565102714814  |
+|[QUEENS, sr_UNKNOWN]                                   |[ss_U]      |0.910334317432585 |1.75507106711456  |
+|[vs_M, ss_U]                                           |[sr_UNKNOWN]|0.9744267966029414|1.7418488216539667|
+|[vs_M, ss_U]                                           |[sa_UNKNOWN]|0.9941606078445528|1.3597566308150484|
+|[vr_BLACK, vs_M]                                       |[sa_UNKNOWN]|0.7829777369763922|1.0709126485533418|
+|[va_25-44, ss_U, sa_UNKNOWN]                           |[vs_M]      |0.5148647191611202|1.1305334144182726|
+|[va_25-44, ss_U, sa_UNKNOWN]                           |[sr_UNKNOWN]|0.9827349851019077|1.7567002280371395|
+|[ss_U, sa_UNKNOWN]                                     |[sr_UNKNOWN]|0.9807967154024961|1.753235449765711 |
+|[ss_U, sa_UNKNOWN]                                     |[vs_M]      |0.5190614525313332|1.1397485482774354|
+|[BRONX, sa_UNKNOWN]                                    |[sr_UNKNOWN]|0.7318735236580561|1.308269681445328 |
+|[va_45-64, ss_U, sa_UNKNOWN]                           |[sr_UNKNOWN]|0.9836203009956288|1.7582827855485357|
+|[vr_WHITE, ss_U]                                       |[sr_UNKNOWN]|0.9826827757125155|1.7566069004893863|
+|[vr_WHITE, ss_U]                                       |[sa_UNKNOWN]|0.995396260977318 |1.3614466872580488|
+|[ss_U, vs_F]                                           |[sr_UNKNOWN]|0.976186028313467 |1.7449935583265195|
+|[ss_U, vs_F]                                           |[sa_UNKNOWN]|0.9921130550306233|1.3569561039246085|
+|[vr_BLACK, ss_U, sa_UNKNOWN]                           |[sr_UNKNOWN]|0.9784829704935082|1.7490994860818523|
+|[QUEENS, ss_U, sr_UNKNOWN]                             |[sa_UNKNOWN]|0.9989545757013274|1.3663135488117255|
+|[vs_M, sa_UNKNOWN]                                     |[sr_UNKNOWN]|0.7581622178805405|1.3552623659793461|
+|[vs_M, sa_UNKNOWN]                                     |[ss_U]      |0.720144289035241 |1.3883958691111689|
+|[va_25-44, vs_M, sa_UNKNOWN]                           |[sr_UNKNOWN]|0.7768686419211336|1.3887012685075406|
+|[va_25-44, vs_M, sa_UNKNOWN]                           |[ss_U]      |0.7416436677756262|1.4298454078856775|
+|[vs_M]                                                 |[sr_UNKNOWN]|0.6275311242349706|1.1217511188223956|
+|[vs_M]                                                 |[ss_U]      |0.590588182548627 |1.138619309326024 |
+|[vs_M]                                                 |[sa_UNKNOWN]|0.815308147947585 |1.115132355458012 |
+|[va_25-44, ss_U, vs_F, sr_UNKNOWN]                     |[sa_UNKNOWN]|0.9986662250588562|1.365919159117539 |
+|[BROOKLYN, sr_UNKNOWN]                                 |[sa_UNKNOWN]|0.9786633016550259|1.338560292230815 |
+|[BROOKLYN, sr_UNKNOWN]                                 |[ss_U]      |0.9141016489105853|1.7623342608123609|
+|[va_45-64, sa_UNKNOWN]                                 |[sr_UNKNOWN]|0.7675978638861181|1.372129173146038 |
+|[va_45-64, sa_UNKNOWN]                                 |[ss_U]      |0.7309951446947109|1.4093156811589909|
+|[va_25-44, ss_U]                                       |[vs_M]      |0.5141567734729233|1.1289789162630992|
+|[va_25-44, ss_U]                                       |[sr_UNKNOWN]|0.9772823483208914|1.746953298883476 |
+|[va_25-44, ss_U]                                       |[sa_UNKNOWN]|0.9933763913233447|1.358684023827512 |
+|[sr_BLACK]                                             |[vs_F]      |0.6248092297086902|1.147447381139559 |
+|[sr_BLACK]                                             |[vr_BLACK]  |0.6453902569869195|1.9505414012299922|
+|[sr_BLACK]                                             |[ss_M]      |0.7100553923648459|1.9893111138781638|
+|[INSIDE RESIDENCE - APT. HOUSE, ss_U]                  |[sr_UNKNOWN]|0.9795908472978817|1.7510798851359046|
+|[INSIDE RESIDENCE - APT. HOUSE, ss_U]                  |[sa_UNKNOWN]|0.9918161702391733|1.3565500417043024|
+|[BROOKLYN, vs_M]                                       |[sa_UNKNOWN]|0.8201654028583469|1.121775833906416 |
+|[va_25-44, ss_U, sr_UNKNOWN]                           |[vs_M]      |0.5141531548535975|1.1289709705447197|
+|[va_25-44, ss_U, sr_UNKNOWN]                           |[sa_UNKNOWN]|0.9989188230044543|1.3662646482957936|
+|[ STREET]                                              |[sa_UNKNOWN]|0.8394585584637603|1.1481639205564045|
+|[vs_M, sr_UNKNOWN, sa_UNKNOWN]                         |[ss_U]      |0.9300920283352272|1.793162772649114 |
+|[va_25-44, vs_M, ss_U]                                 |[sr_UNKNOWN]|0.9772754702382231|1.7469410038806776|
+|[va_25-44, vs_M, ss_U]                                 |[sa_UNKNOWN]|0.9947441775108994|1.3605548043868998|
+|[ss_U, vs_F, sa_UNKNOWN]                               |[sr_UNKNOWN]|0.9825248461711279|1.7563245915601475|
+|[ss_U, vs_F, sr_UNKNOWN]                               |[sa_UNKNOWN]|0.998555294283844 |1.3657674342798278|
+|[BROOKLYN, va_25-44]                                   |[sa_UNKNOWN]|0.7164010897058387|0.979852877255579 |
+|[vr_BLACK, sr_UNKNOWN, sa_UNKNOWN]                     |[ss_U]      |0.9270497541137097|1.7872974467329465|
+|[BROOKLYN]                                             |[vs_F]      |0.5429353052487902|0.9970878542021421|
+|[BROOKLYN]                                             |[sr_UNKNOWN]|0.549540239690615 |0.9823375365841688|
+|[BROOKLYN]                                             |[ss_U]      |0.5152947532779087|0.9934580024013728|
+|[BROOKLYN]                                             |[sa_UNKNOWN]|0.7326772345617736|1.0021144673018265|
+|[vs_M, ss_U, sr_UNKNOWN]                               |[sa_UNKNOWN]|0.9990238850292377|1.36640834618899  |
+|[BROOKLYN, sa_UNKNOWN]                                 |[vs_M]      |0.5115648694707204|1.1232876463578139|
+|[BROOKLYN, sa_UNKNOWN]                                 |[sr_UNKNOWN]|0.7340406389036881|1.312143535438416 |
+|[BROOKLYN, sa_UNKNOWN]                                 |[ss_U]      |0.6985283480874876|1.3467216052507731|
+|[vr_HISPANIC]                                          |[vs_F]      |0.562325195491103 |1.0326969292945485|
+|[vr_HISPANIC]                                          |[sr_UNKNOWN]|0.5134639432477321|0.917848901144599 |
+|[vr_HISPANIC]                                          |[sa_UNKNOWN]|0.6921351539023132|0.946663303205452 |
+|[INSIDE RESIDENCE - APT. HOUSE, sr_UNKNOWN]            |[sa_UNKNOWN]|0.9557645655268803|1.3072406965419074|
+|[INSIDE RESIDENCE - APT. HOUSE, sr_UNKNOWN]            |[ss_U]      |0.8759118898119778|1.688706649537556 |
+|[va_45-64]                                             |[vs_M]      |0.5165147933844488|1.134156626451101 |
+|[va_45-64]                                             |[sr_UNKNOWN]|0.6000779155149057|1.0726767918166384|
+|[va_45-64]                                             |[ss_U]      |0.5638108630453136|1.086994210925152 |
+|[va_45-64]                                             |[sa_UNKNOWN]|0.766694582167488 |1.0486414706900387|
+|[BROOKLYN, vs_F]                                       |[sa_UNKNOWN]|0.6590104261521559|0.9013571747521485|
+|[vr_BLACK]                                             |[vs_F]      |0.6059146023475945|1.1127478446214996|
+|[vr_BLACK]                                             |[sa_UNKNOWN]|0.6821116008823142|0.9329536545071191|
+|[va_25-44, sa_UNKNOWN]                                 |[vs_M]      |0.5004904525241957|1.0989705822100795|
+|[va_25-44, sa_UNKNOWN]                                 |[sr_UNKNOWN]|0.7594580221993001|1.3575786972148933|
+|[va_25-44, sa_UNKNOWN]                                 |[ss_U]      |0.7209380660253975|1.3899262245009272|
+|[vr_WHITE, sr_UNKNOWN]                                 |[sa_UNKNOWN]|0.9849582485726363|1.3471701644630367|
+|[vr_WHITE, sr_UNKNOWN]                                 |[ss_U]      |0.9316755354130511|1.7962156812384529|
+|[vr_HISPANIC, ss_U, sa_UNKNOWN]                        |[sr_UNKNOWN]|0.9776291501780688|1.7475732288857888|
+|[va_25-44, vs_M]                                       |[sr_UNKNOWN]|0.6432923270146568|1.149925254206762 |
+|[va_25-44, vs_M]                                       |[ss_U]      |0.6087073348442337|1.1735519701580885|
+|[va_25-44, vs_M]                                       |[sa_UNKNOWN]|0.81644070252841  |1.1166813995348797|
+|[va_25-44, vs_F, sr_UNKNOWN]                           |[sa_UNKNOWN]|0.9621324706937416|1.3159503569395512|
+|[va_25-44, vs_F, sr_UNKNOWN]                           |[ss_U]      |0.894505476907309 |1.7245539927827558|
+|[sa_UNKNOWN]                                           |[sr_UNKNOWN]|0.7458240780719231|1.3332071696711525|
+|[sa_UNKNOWN]                                           |[ss_U]      |0.7045906735439202|1.358409412470899 |
+|[sa_UNKNOWN]                                           |[vs_M]      |0.5078508071482332|1.115132355458012 |
+|[ss_M]                                                 |[vs_F]      |0.5950311255678313|1.0927605967787382|
+|[va_25-44, ss_U, vs_F, sa_UNKNOWN]                     |[sr_UNKNOWN]|0.9839275256997312|1.7588319689152998|
+|[vr_BLACK, sa_UNKNOWN]                                 |[vs_F]      |0.5476398694433604|1.0057276751391333|
+|[vr_BLACK, sa_UNKNOWN]                                 |[sr_UNKNOWN]|0.7057269308546493|1.2615310120823198|
+|[vr_BLACK, sa_UNKNOWN]                                 |[ss_U]      |0.6686309291517366|1.2890811385005723|
+|[vr_WHITE, sa_UNKNOWN]                                 |[vs_M]      |0.532917066790291 |1.1701725301780874|
+|[vr_WHITE, sa_UNKNOWN]                                 |[sr_UNKNOWN]|0.7981514288552601|1.4267455807862666|
+|[vr_WHITE, sa_UNKNOWN]                                 |[ss_U]      |0.7647417960859632|1.4743772418786043|
+|[MANHATTAN, ss_U, sr_UNKNOWN]                          |[sa_UNKNOWN]|0.998770350178308 |1.366061575564632 |
+|[vr_HISPANIC, ss_U, sr_UNKNOWN]                        |[sa_UNKNOWN]|0.9985190396276067|1.3657178472122777|
+|[QUEENS, sr_UNKNOWN, sa_UNKNOWN]                       |[ss_U]      |0.9312328494308582|1.7953622086797612|
+|[BROOKLYN, sr_UNKNOWN, sa_UNKNOWN]                     |[ss_U]      |0.9330177750860394|1.7988034404496391|
+|[vr_HISPANIC, sa_UNKNOWN]                              |[sr_UNKNOWN]|0.7177555095582794|1.2830328485610918|
+|[vr_HISPANIC, sa_UNKNOWN]                              |[ss_U]      |0.667461892020499 |1.2868273036114248|
+|[vr_HISPANIC, sr_UNKNOWN, sa_UNKNOWN]                  |[ss_U]      |0.9091260095987644|1.7527415206186228|
+|[MANHATTAN, ss_U]                                      |[sr_UNKNOWN]|0.9725307625775569|1.7384595422905036|
+|[MANHATTAN, ss_U]                                      |[sa_UNKNOWN]|0.9923829247862869|1.3573252165074492|
+|[vr_WHITE, sr_UNKNOWN, sa_UNKNOWN]                     |[ss_U]      |0.9452631114937223|1.8224117294316704|
+|[va_25-44, vs_M, ss_U, sr_UNKNOWN]                     |[sa_UNKNOWN]|0.9991575143628576|1.3665911168309037|
+|[vr_BLACK, ss_U, sr_UNKNOWN]                           |[sa_UNKNOWN]|0.9987083689299093|1.3659768011199083|
+|[va_45-64, sr_UNKNOWN, sa_UNKNOWN]                     |[ss_U]      |0.9367166039399374|1.8059345651138101|
+|[vr_BLACK, vs_F]                                       |[sa_UNKNOWN]|0.6165085089642668|0.843225457137744 |
+|[BROOKLYN, ss_U, sr_UNKNOWN]                           |[sa_UNKNOWN]|0.9989154459537   |1.3662600293568419|
+|[vr_HISPANIC, sr_UNKNOWN]                              |[sa_UNKNOWN]|0.967514518994508 |1.3233116180945277|
+|[vr_HISPANIC, sr_UNKNOWN]                              |[ss_U]      |0.8808971877094955|1.6983180109169194|
+|[vs_F, sr_UNKNOWN, sa_UNKNOWN]                         |[ss_U]      |0.9228028602721676|1.7791096849802985|
+|[INSIDE RESIDENCE - APT. HOUSE]                        |[vs_F]      |0.6618291426875608|1.2154335762497437|
+|[INSIDE RESIDENCE - APT. HOUSE]                        |[sa_UNKNOWN]|0.6158383051098252|0.8423087902250903|
+|[ss_U, sr_UNKNOWN, sa_UNKNOWN]                         |[vs_M]      |0.5182130126736942|1.137885554808495 |
+|[MANHATTAN]                                            |[vs_F]      |0.5346248616857556|0.9818259210406265|
+|[MANHATTAN]                                            |[sr_UNKNOWN]|0.589285898950927 |1.0533853874743415|
+|[MANHATTAN]                                            |[ss_U]      |0.5510787335914886|1.0624474135571398|
+|[MANHATTAN]                                            |[sa_UNKNOWN]|0.7695310994348976|1.0525210985211433|
+|[va_45-64, sr_UNKNOWN]                                 |[sa_UNKNOWN]|0.9807278493490984|1.3413840637567616|
+|[va_45-64, sr_UNKNOWN]                                 |[ss_U]      |0.9195709851681191|1.772878819704736 |
+|[INSIDE RESIDENCE - APT. HOUSE, sa_UNKNOWN]            |[sr_UNKNOWN]|0.7440023109308921|1.3299506470067561|
+|[INSIDE RESIDENCE - APT. HOUSE, sa_UNKNOWN]            |[ss_U]      |0.6903514585726492|1.3309570427909512|
+|[ss_M, va_25-44]                                       |[vs_F]      |0.6477841416300042|1.1896402638028238|
+|[ss_U, sr_UNKNOWN]                                     |[sa_UNKNOWN]|0.9987982196080541|1.3660996937938148|
+|[ss_U, sr_UNKNOWN]                                     |[vs_M]      |0.5180959556548179|1.1376285224924187|
+|[vs_F, sr_UNKNOWN]                                     |[sa_UNKNOWN]|0.964007852566096 |1.318515398157361 |
+|[vs_F, sr_UNKNOWN]                                     |[ss_U]      |0.8908762576947026|1.7175570714163002|
+|[FRONT OF STREET]                                      |[sa_UNKNOWN]|0.8412747753545987|1.1506480392599914|
+|[INSIDE RESIDENCE - APT. HOUSE, sr_UNKNOWN, sa_UNKNOWN]|[ss_U]      |0.9149329525724041|1.763936965419784 |
+|[sr_UNKNOWN, sa_UNKNOWN]                               |[ss_U]      |0.9265726846760066|1.7863776848926167|
+|[sr_UNKNOWN, sa_UNKNOWN]                               |[vs_M]      |0.5162521640428946|1.133579948276847 |
+|[vs_M, sr_UNKNOWN]                                     |[sa_UNKNOWN]|0.98502816805715  |1.3472657963779815|
+|[vs_M, sr_UNKNOWN]                                     |[ss_U]      |0.9170620047475592|1.7680416528971608|
+|[va_25-44, ss_U, vs_F]                                 |[sr_UNKNOWN]|0.9772896272384501|1.7469663104037016|
+|[va_25-44, ss_U, vs_F]                                 |[sa_UNKNOWN]|0.9919288944877481|1.3567042195536798|
+|[BROOKLYN, ss_U, sa_UNKNOWN]                           |[sr_UNKNOWN]|0.9804512094717116|1.7526178363128486|
++-------------------------------------------------------+------------+------------------+------------------+
+
++-------------------------------------------------------------+-------+
+|items                                                        |freq   |
++-------------------------------------------------------------+-------+
+|[sr_HISPANIC]                                                |659791 |
+|[va_25-44]                                                   |2270109|
+|[va_25-44, vs_F]                                             |1276441|
+|[va_25-44, vs_F, sr_UNKNOWN]                                 |624440 |
+|[va_25-44, vs_F, sr_UNKNOWN, sa_UNKNOWN]                     |600794 |
+|[va_25-44, vs_F, sa_UNKNOWN]                                 |809681 |
+|[va_25-44, vs_M]                                             |993668 |
+|[va_25-44, vs_M, sr_UNKNOWN]                                 |639219 |
+|[va_25-44, vs_M, sr_UNKNOWN, sa_UNKNOWN]                     |630251 |
+|[va_25-44, vs_M, ss_U]                                       |604853 |
+|[va_25-44, vs_M, ss_U, sr_UNKNOWN]                           |591108 |
+|[va_25-44, vs_M, ss_U, sr_UNKNOWN, sa_UNKNOWN]               |590610 |
+|[va_25-44, vs_M, ss_U, sa_UNKNOWN]                           |601674 |
+|[va_25-44, vs_M, sa_UNKNOWN]                                 |811271 |
+|[va_25-44, sr_UNKNOWN]                                       |1263659|
+|[va_25-44, sr_UNKNOWN, sa_UNKNOWN]                           |1231045|
+|[va_25-44, ss_U]                                             |1176398|
+|[va_25-44, ss_U, vs_F]                                       |571545 |
+|[va_25-44, ss_U, vs_F, sr_UNKNOWN]                           |558565 |
+|[va_25-44, ss_U, vs_F, sr_UNKNOWN, sa_UNKNOWN]               |557820 |
+|[va_25-44, ss_U, vs_F, sa_UNKNOWN]                           |566932 |
+|[va_25-44, ss_U, sr_UNKNOWN]                                 |1149673|
+|[va_25-44, ss_U, sr_UNKNOWN, sa_UNKNOWN]                     |1148430|
+|[va_25-44, ss_U, sa_UNKNOWN]                                 |1168606|
+|[va_25-44, sa_UNKNOWN]                                       |1620952|
+|[INSIDE RESIDENCE - APT. HOUSE]                              |1202957|
+|[INSIDE RESIDENCE - APT. HOUSE, vs_F]                        |796152 |
+|[INSIDE RESIDENCE - APT. HOUSE, va_25-44]                    |574990 |
+|[INSIDE RESIDENCE - APT. HOUSE, sr_UNKNOWN]                  |576687 |
+|[INSIDE RESIDENCE - APT. HOUSE, sr_UNKNOWN, sa_UNKNOWN]      |551177 |
+|[INSIDE RESIDENCE - APT. HOUSE, ss_U]                        |515651 |
+|[INSIDE RESIDENCE - APT. HOUSE, ss_U, sr_UNKNOWN]            |505127 |
+|[INSIDE RESIDENCE - APT. HOUSE, ss_U, sr_UNKNOWN, sa_UNKNOWN]|504290 |
+|[INSIDE RESIDENCE - APT. HOUSE, ss_U, sa_UNKNOWN]            |511431 |
+|[INSIDE RESIDENCE - APT. HOUSE, sa_UNKNOWN]                  |740827 |
+|[MANHATTAN]                                                  |1063701|
+|[MANHATTAN, vs_F]                                            |568681 |
+|[MANHATTAN, sr_UNKNOWN]                                      |626824 |
+|[MANHATTAN, sr_UNKNOWN, sa_UNKNOWN]                          |613618 |
+|[MANHATTAN, ss_U]                                            |586183 |
+|[MANHATTAN, ss_U, sr_UNKNOWN]                                |570081 |
+|[MANHATTAN, ss_U, sr_UNKNOWN, sa_UNKNOWN]                    |569380 |
+|[MANHATTAN, ss_U, sa_UNKNOWN]                                |581718 |
+|[MANHATTAN, sa_UNKNOWN]                                      |818551 |
+|[sa_UNKNOWN]                                                 |3652427|
+|[vr_WHITE]                                                   |1197644|
+|[vr_WHITE, vs_F]                                             |593656 |
+|[vr_WHITE, va_25-44]                                         |552623 |
+|[vr_WHITE, vs_M]                                             |603988 |
+|[vr_WHITE, vs_M, sa_UNKNOWN]                                 |514994 |
+|[vr_WHITE, sr_UNKNOWN]                                       |783087 |
+|[vr_WHITE, sr_UNKNOWN, sa_UNKNOWN]                           |771308 |
+|[vr_WHITE, ss_U]                                             |742440 |
+|[vr_WHITE, ss_U, sr_UNKNOWN]                                 |729583 |
+|[vr_WHITE, ss_U, sr_UNKNOWN, sa_UNKNOWN]                     |729089 |
+|[vr_WHITE, ss_U, sa_UNKNOWN]                                 |739022 |
+|[vr_WHITE, sa_UNKNOWN]                                       |966368 |
+|[BRONX]                                                      |1050535|
+|[BRONX, vs_F]                                                |604451 |
+|[BRONX, sr_UNKNOWN]                                          |550133 |
+|[BRONX, sr_UNKNOWN, sa_UNKNOWN]                              |530126 |
+|[BRONX, sa_UNKNOWN]                                          |724341 |
+|[sr_UNKNOWN]                                                 |2794634|
+|[sr_UNKNOWN, sa_UNKNOWN]                                     |2724068|
+|[ STREET]                                                    |655731 |
+|[ STREET, sa_UNKNOWN]                                        |550459 |
+|[ss_M]                                                       |1783100|
+|[ss_M, vs_F]                                                 |1061000|
+|[ss_M, va_25-44]                                             |813274 |
+|[ss_M, va_25-44, vs_F]                                       |526826 |
+|[ss_M, vs_M]                                                 |722068 |
+|[ss_M, sa_UNKNOWN]                                           |787576 |
+|[FRONT OF STREET]                                            |730262 |
+|[FRONT OF STREET, sa_UNKNOWN]                                |614351 |
+|[vs_F]                                                       |2720200|
+|[vs_F, sr_UNKNOWN]                                           |1366687|
+|[vs_F, sr_UNKNOWN, sa_UNKNOWN]                               |1317497|
+|[vs_F, sa_UNKNOWN]                                           |1797254|
+|[ss_F]                                                       |621334 |
+|[vr_BLACK]                                                   |1652926|
+|[vr_BLACK, vs_F]                                             |1001532|
+|[vr_BLACK, vs_F, sa_UNKNOWN]                                 |617453 |
+|[vr_BLACK, va_25-44]                                         |756119 |
+|[vr_BLACK, vs_M]                                             |651394 |
+|[vr_BLACK, vs_M, sa_UNKNOWN]                                 |510027 |
+|[vr_BLACK, sr_UNKNOWN]                                       |816194 |
+|[vr_BLACK, sr_UNKNOWN, sa_UNKNOWN]                           |795693 |
+|[vr_BLACK, ss_U]                                             |759943 |
+|[vr_BLACK, ss_U, sr_UNKNOWN]                                 |738601 |
+|[vr_BLACK, ss_U, sr_UNKNOWN, sa_UNKNOWN]                     |737647 |
+|[vr_BLACK, ss_U, sa_UNKNOWN]                                 |753868 |
+|[vr_BLACK, ss_M]                                             |625428 |
+|[vr_BLACK, sa_UNKNOWN]                                       |1127480|
+|[va_45-64]                                                   |1183333|
+|[va_45-64, vs_F]                                             |572124 |
+|[va_45-64, vs_M]                                             |611209 |
+|[va_45-64, sr_UNKNOWN]                                       |710092 |
+|[va_45-64, sr_UNKNOWN, sa_UNKNOWN]                           |696407 |
+|[va_45-64, ss_U]                                             |667176 |
+|[va_45-64, ss_U, sr_UNKNOWN]                                 |652980 |
+|[va_45-64, ss_U, sr_UNKNOWN, sa_UNKNOWN]                     |652336 |
+|[va_45-64, ss_U, sa_UNKNOWN]                                 |663199 |
+|[va_45-64, sa_UNKNOWN]                                       |907255 |
+|[101]                                                        |603134 |
+|[BROOKLYN]                                                   |1547328|
+|[BROOKLYN, vs_F]                                             |840099 |
+|[BROOKLYN, vs_F, sa_UNKNOWN]                                 |553634 |
+|[BROOKLYN, va_25-44]                                         |708081 |
+|[BROOKLYN, va_25-44, sa_UNKNOWN]                             |507270 |
+|[BROOKLYN, vs_M]                                             |707122 |
+|[BROOKLYN, vs_M, sa_UNKNOWN]                                 |579957 |
+|[BROOKLYN, vr_BLACK]                                         |698237 |
+|[BROOKLYN, sr_UNKNOWN]                                       |850319 |
+|[BROOKLYN, sr_UNKNOWN, sa_UNKNOWN]                           |832176 |
+|[BROOKLYN, ss_U]                                             |797330 |
+|[BROOKLYN, ss_U, sr_UNKNOWN]                                 |777278 |
+|[BROOKLYN, ss_U, sr_UNKNOWN, sa_UNKNOWN]                     |776435 |
+|[BROOKLYN, ss_U, sa_UNKNOWN]                                 |791916 |
+|[BROOKLYN, ss_M]                                             |555527 |
+|[BROOKLYN, sa_UNKNOWN]                                       |1133692|
+|[sr_BLACK]                                                   |1105387|
+|[sr_BLACK, vs_F]                                             |690656 |
+|[sr_BLACK, vr_BLACK]                                         |713406 |
+|[sr_BLACK, ss_M]                                             |784886 |
+|[sa_25-44]                                                   |721611 |
+|[sa_25-44, vs_F]                                             |507195 |
+|[sa_25-44, ss_M]                                             |543283 |
+|[ss_U]                                                       |2591149|
+|[ss_U, vs_F]                                                 |1247251|
+|[ss_U, vs_F, sr_UNKNOWN]                                     |1217549|
+|[ss_U, vs_F, sr_UNKNOWN, sa_UNKNOWN]                         |1215790|
+|[ss_U, vs_F, sa_UNKNOWN]                                     |1237414|
+|[ss_U, sr_UNKNOWN]                                           |2527084|
+|[ss_U, sr_UNKNOWN, sa_UNKNOWN]                               |2524047|
+|[ss_U, sa_UNKNOWN]                                           |2573466|
+|[QUEENS]                                                     |1079906|
+|[QUEENS, vs_F]                                               |562572 |
+|[QUEENS, vs_M]                                               |517283 |
+|[QUEENS, sr_UNKNOWN]                                         |627308 |
+|[QUEENS, sr_UNKNOWN, sa_UNKNOWN]                             |612589 |
+|[QUEENS, ss_U]                                               |582906 |
+|[QUEENS, ss_U, sr_UNKNOWN]                                   |571060 |
+|[QUEENS, ss_U, sr_UNKNOWN, sa_UNKNOWN]                       |570463 |
+|[QUEENS, ss_U, sa_UNKNOWN]                                   |579600 |
+|[QUEENS, sa_UNKNOWN]                                         |797554 |
+|[vs_M]                                                       |2275076|
+|[vs_M, sr_UNKNOWN]                                           |1427681|
+|[vs_M, sr_UNKNOWN, sa_UNKNOWN]                               |1406306|
+|[vs_M, ss_U]                                                 |1343633|
+|[vs_M, ss_U, sr_UNKNOWN]                                     |1309272|
+|[vs_M, ss_U, sr_UNKNOWN, sa_UNKNOWN]                         |1307994|
+|[vs_M, ss_U, sa_UNKNOWN]                                     |1335787|
+|[vs_M, sa_UNKNOWN]                                           |1854888|
+|[va_18-24]                                                   |705597 |
+|[vr_HISPANIC]                                                |1345074|
+|[vr_HISPANIC, vs_F]                                          |756369 |
+|[vr_HISPANIC, va_25-44]                                      |650342 |
+|[vr_HISPANIC, vs_M]                                          |588705 |
+|[vr_HISPANIC, sr_UNKNOWN]                                    |690647 |
+|[vr_HISPANIC, sr_UNKNOWN, sa_UNKNOWN]                        |668211 |
+|[vr_HISPANIC, ss_U]                                          |626301 |
+|[vr_HISPANIC, ss_U, sr_UNKNOWN]                              |608389 |
+|[vr_HISPANIC, ss_U, sr_UNKNOWN, sa_UNKNOWN]                  |607488 |
+|[vr_HISPANIC, ss_U, sa_UNKNOWN]                              |621389 |
+|[vr_HISPANIC, ss_M]                                          |540112 |
+|[vr_HISPANIC, sa_UNKNOWN]                                    |930973 |
+|[638]                                                        |558074 |
++-------------------------------------------------------------+-------+
+
 
 ###### CHICAGO ######
-Row(items=['STREET'], freq=1884351)
-Row(items=['06'], freq=1529357)
++----------+----------+----------+----+
+|antecedent|consequent|confidence|lift|
++----------+----------+----------+----+
++----------+----------+----------+----+
+
++-----------+-------+
+|items      |freq   |
++-----------+-------+
+|[14]       |826007 |
+|[STREET]   |1884351|
+|[APARTMENT]|772465 |
+|[06]       |1529357|
+|[RESIDENCE]|1230778|
+|[26]       |725833 |
+|[08B]      |1134101|
++-----------+-------+
+
 
 #### LOS ANGELES ####
-Row(items=['SINGLE FAMILY DWELLING'], freq=429283)
-Row(items=['r_WHITE'], freq=510562)
-Row(items=['s_M'], freq=974774)
-Row(items=['a_<18'], freq=473310)
-Row(items=['s_F'], freq=889432)
-Row(items=['a_25-44'], freq=794475)
-Row(items=['a_45-64'], freq=472980)
-Row(items=['STREET'], freq=472864)
-Row(items=['r_HISPANIC'], freq=725943)
++------------------------+-----------+------------------+------------------+
+|antecedent              |consequent |confidence        |lift              |
++------------------------+-----------+------------------+------------------+
+|[s_U, a_<18]            |[r_UNKNOWN]|0.9998557339734471|7.6966021376360425|
+|[r_WHITE]               |[s_M]      |0.5648148510856664|1.2261537345657696|
+|[s_U, r_UNKNOWN]        |[a_<18]    |0.9910862890123815|4.431069301177556 |
+|[a_45-64]               |[s_M]      |0.5431244450082456|1.1790661405250744|
+|[a_25-44]               |[s_F]      |0.5074294345322383|1.2072734780799146|
+|[r_HISPANIC]            |[s_F]      |0.5065466572444393|1.2051731789366582|
+|[SINGLE FAMILY DWELLING]|[s_F]      |0.5776585609027145|1.3743622511897289|
+|[s_U]                   |[a_<18]    |0.9905249954351675|4.428559801483619 |
+|[s_U]                   |[r_UNKNOWN]|0.9992894738931274|7.692243230249147 |
+|[r_UNKNOWN, a_<18]      |[s_U]      |0.9444503327302046|7.9332088450617775|
+|[a_<18]                 |[s_U]      |0.5272210601931081|4.428559801483619 |
+|[a_<18]                 |[r_UNKNOWN]|0.5581500496503349|4.296478701170818 |
+|[r_UNKNOWN]             |[s_U]      |0.9157633210138812|7.692243230249147 |
+|[r_UNKNOWN]             |[a_<18]    |0.9609827430666705|4.296478701170817 |
++------------------------+-----------+------------------+------------------+
+
++----------------------------------------------+------+
+|items                                         |freq  |
++----------------------------------------------+------+
+|[SINGLE FAMILY DWELLING]                      |429283|
+|[SINGLE FAMILY DWELLING, s_F]                 |247979|
+|[r_WHITE]                                     |510562|
+|[r_WHITE, s_F]                                |222157|
+|[r_WHITE, s_M]                                |288373|
+|[a_18-24]                                     |258497|
+|[s_M]                                         |974774|
+|[a_<18]                                       |473310|
+|[s_U]                                         |251926|
+|[s_U, a_<18]                                  |249539|
+|[s_U, r_UNKNOWN]                              |251747|
+|[s_U, r_UNKNOWN, a_<18]                       |249503|
+|[s_F]                                         |889432|
+|[r_BLACK]                                     |335321|
+|[a_25-44]                                     |794475|
+|[a_25-44, s_F]                                |403140|
+|[a_25-44, s_M]                                |390948|
+|[r_UNKNOWN]                                   |274904|
+|[r_UNKNOWN, a_<18]                            |264178|
+|[a_45-64]                                     |472980|
+|[a_45-64, s_F]                                |215901|
+|[a_45-64, s_M]                                |256887|
+|[MULTI-UNIT DWELLING (APARTMENT, DUPLEX, ETC)]|265798|
+|[STREET]                                      |472864|
+|[r_HISPANIC]                                  |725943|
+|[r_HISPANIC, a_25-44]                         |338935|
+|[r_HISPANIC, s_F]                             |367724|
+|[r_HISPANIC, s_M]                             |358153|
++----------------------------------------------+------+
+
