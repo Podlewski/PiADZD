@@ -7,25 +7,28 @@ sns.set_theme(style="darkgrid")
 
 
 def get_most_common_crimes(df, city):
-    crimes = df.groupBy('Crime Category').count().sort(
-        desc('count')).limit(10)
+    crimes = df.groupBy('Crime Category').count().withColumnRenamed('count', 'Number of crimes').sort(
+        desc('Number of crimes')).limit(10)
 
-    sns.barplot(y='Crime Category', x='count', data=crimes.toPandas())
+    sns.barplot(y='Crime Category', x='Number of crimes',
+                data=crimes.toPandas())
     plt.title('Most common crimes - ' + city)
     plt.show()
 
 
 def get_most_common_locations(df, city):
-    locations = df.groupBy('Location Type').count().sort(
-        desc('count')).limit(10)
+    locations = df.groupBy('Location Type').count().withColumnRenamed('count', 'Number of crimes').sort(
+        desc('Number of crimes')).limit(10)
 
-    sns.barplot(y='Location Type', x='count', data=locations.toPandas())
+    sns.barplot(y='Location Type', x='Number of crimes',
+                data=locations.toPandas())
     plt.title('Most common crime locations - ' + city)
     plt.show()
 
 
 def get_victim_age(df1, df2, cols):
-    df = df1.union(df2).groupBy(cols).count().replace('<18', '0-18')
+    df = df1.union(df2).groupBy(cols).count().withColumnRenamed(
+        'count', 'Number of crimes').replace('<18', '0-18')
     df = df.filter(col('Victim Age Group') !=
                    'UNKNOWN').orderBy('Victim Age Group')
     return df.replace('0-18', '<18')
@@ -90,14 +93,15 @@ def main():
     la_age = df_la.select(*cols_age).withColumn('City', lit('Los Angeles'))
 
     age_data = get_victim_age(ny_age, la_age, 'Victim Age Group')
-    sns.barplot(x='Victim Age Group', y='count', data=age_data.toPandas())
+    sns.barplot(x='Victim Age Group', y='Number of crimes',
+                data=age_data.toPandas())
     plt.title('Victim Age Group - All')
     plt.show()
 
     age_data_all = get_victim_age(
         ny_age, la_age, ['Victim Age Group', 'City'])
 
-    sns.barplot(x='City', y='count', data=age_data_all.toPandas(),
+    sns.barplot(x='City', y='Number of crimes', data=age_data_all.toPandas(),
                 hue='Victim Age Group')
     plt.title('Victim Age Group - NY & LA')
     plt.show()
