@@ -2,7 +2,8 @@ from mpl_toolkits.axes_grid1.axes_divider import make_axes_area_auto_adjustable
 import matplotlib.pyplot as plt
 import os
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import desc, lit, col
+from pyspark.sql.functions import desc, lit, col, to_timestamp, when
+from pyspark.sql.types import LongType
 import seaborn as sns
 from statistics_parser import ArgumentParser
 
@@ -188,6 +189,32 @@ def main(args):
     cols = ['Crime Category', 'Victim Sex']
     df_ny_la = df_ny.select(*cols).union(df_la.select(*cols))
     plotter.get_victim_sex(df_ny_la, 'All')
+
+    # AVERAGE TIME FROM CRIME TO REPORT
+
+    cols_date = ['Date', 'Date Reported']
+    ny_dates = df_ny.select(*cols_date).withColumn('City', lit('New York'))
+    la_dates = df_la.select(*cols_date).withColumn('City', lit('Los Angeles'))
+    dates = ny_dates.union(la_dates).withColumn('City', lit('All'))
+    dates = dates.union(ny_dates).union(la_dates)
+
+    dates = dates.withColumn('report_timestamp', to_timestamp(
+        col('Date Reported'))).withColumn('date_timestamp', to_timestamp(col('Date')))
+
+    dates = dates.withColumn('diff_in_sec', col('report_timestamp').cast(
+        LongType()) - col('date_timestamp').cast(LongType()))
+
+    dates = dates.withColumn('diff_in_sec', when(col('diff_in_sec') < 0, col(
+        'diff_in_sec') * (-1)).otherwise(col('diff_in_sec')))
+
+    dates = dates.groupBy('City').avg('diff_in_sec')
+    dates = dates.withColumnRenamed(
+        'avg(diff_in_sec)', 'Number of days').withColumn('Number of days', col('Number of days')/86400).sort(desc('City'))
+
+    sns.barplot(x='City', y='Number of days', data=dates.toPandas())
+    plot_title = 'Average time from crime to report'
+    plt.title(plot_title)
+    plotter.save_show_plot(plot_title)
 
 
 if __name__ == '__main__':
