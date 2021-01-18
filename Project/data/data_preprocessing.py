@@ -77,6 +77,7 @@ def preporcess_los_angeles():
              'Victim Sex', 'Victim Race', 'Arrest', 'Location Type', 'Area']]
     
     df['Location Type'] = df['Location Type'].apply(cut_location_types_la)
+    df['Crime Description'] = df['Crime Description'].apply(cut_crimes_types_la)
     print('\nLOS ANGELES:')
     print(df.iloc[:, :].sample(15))
     df.to_csv('dfla.csv', index=False) 

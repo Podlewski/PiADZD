@@ -144,3 +144,14 @@ def cut_location_types_la(row):
         return 'VEHICLE'
     else:
         return row
+
+
+def cut_crimes_types_la(row):
+    if row == 'VANDALISM - FELONY ($400 & OVER, ALL CHURCH VANDALISMS)':
+        return 'VANDALISM - FELONY'
+    elif row == 'VANDALISM - MISDEAMEANOR ($399 OR UNDER)':
+        return 'VANDALISM - MISDEMEANOR'
+    elif row == 'ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT':
+        return 'ASSAULT WITH DEADLY WEAPON'
+    else:
+        return row
