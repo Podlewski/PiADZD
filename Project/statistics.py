@@ -2,7 +2,7 @@ from mpl_toolkits.axes_grid1.axes_divider import make_axes_area_auto_adjustable
 import matplotlib.pyplot as plt
 import os
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import desc, lit, col, to_timestamp, when
+from pyspark.sql.functions import desc, lit, col, to_timestamp, when, count
 from pyspark.sql.types import LongType
 import seaborn as sns
 from statistics_parser import ArgumentParser
@@ -17,7 +17,6 @@ class Plotter:
         self.show_plot = show_plot
         self.save_plot = save_plot
         self.dpi = plot_dpi
-        self.change_img_ratio()
         plt.rcParams['font.family'] = 'DejaVu Sans'
         plt.rcParams['legend.fontsize'] = 'large'
         plt.rcParams['figure.figsize'] = [9,5]
@@ -50,32 +49,44 @@ class Plotter:
 
 
     def get_most_common_crimes(self, df, city):
-        crimes = df.groupBy('Crime Category').count().withColumnRenamed('count', 'Number of crimes').sort(
-            desc('Number of crimes')).limit(10)
+        crimes = df.groupBy('Crime Category').count() \
+            .withColumnRenamed('count', 'Number of crimes') \
+            .sort(desc('Number of crimes')).limit(10)
 
         ax = sns.barplot(y='Crime Category', x='Number of crimes',
                         data=crimes.toPandas())
         title = 'Most common NIBRS crimes - ' + city
         self.barplot(ax, title, long_label=True)
 
-    def get_most_common_local_crimes(self, df, city):
-        crimes = df.groupBy('Crime Description').count().withColumnRenamed('count', 'Number of crimes').sort(
-            desc('Number of crimes')).limit(10)
 
-        ax = sns.barplot(y='Crime Description', x='Number of crimes',
+    def get_most_common_local_crimes(self, df, city):
+        crimes = df.groupBy('Crime Description').count() \
+            .withColumnRenamed('count', 'Number of crimes') \
+            .withColumnRenamed('Crime Description', 'Crime Category') \
+            .sort(desc('Number of crimes')).limit(10)
+
+        ax = sns.barplot(y='Crime Category', x='Number of crimes',
                         data=crimes.toPandas())
         title = 'Most common local crimes - ' + city
         self.barplot(ax, title, long_label=True)
 
 
     def get_most_common_locations(self, df, city):
-        locations = df.groupBy('Location Type').count().withColumnRenamed('count', 'Number of crimes').sort(
-            desc('Number of crimes')).limit(10)
+        locations = df.groupBy('Location Type').count() \
+            .withColumnRenamed('count', 'Number of crimes') \
+            .sort(desc('Number of crimes')).limit(10)
 
         ax = sns.barplot(y='Location Type', x='Number of crimes',
                         data=locations.toPandas())
         title = 'Most common crime locations - ' + city
         self.barplot(ax, title, long_label=True)
+
+
+    def get_victim_race(self, df1, df2, cols):
+        df = df1.union(df2).groupBy(cols).count() \
+            .withColumnRenamed('count', 'Number of crimes')
+        df = df.filter(col('Victim Race') != 'UNKNOWN').orderBy('Victim Race')
+        return df
 
 
     def get_victim_age(self, df1, df2, cols):
@@ -112,8 +123,26 @@ class Plotter:
             'SEX') & ~col('Crime Category').contains('RAPE')).groupBy('Victim Sex').count()
 
         self.get_victim_sex_plot(sexual_crimes.toPandas(),
-                            'Sexual Crimes - ' + title)
-        self.get_victim_sex_plot(other_crimes.toPandas(), 'Other Crimes - ' + title)
+                            'Sexual Crimes - Victims - ' + title)
+        self.get_victim_sex_plot(other_crimes.toPandas(),
+                            'Other Crimes - Victims -' + title)
+
+
+    def get_arrestability_frequency(self, df, city):        
+        all_crimes = df.groupBy('Crime Category').count() 
+        arrested = df.groupBy('Crime Category') \
+            .agg(count(when((col('Arrest') == True), True)).alias('arrested count'))
+
+        crimes = all_crimes.join(arrested, 'Crime Category') \
+            .withColumn('Frequency', (col('arrested count') / col('count')))\
+            .drop('count').drop('arrested count') \
+            .sort(desc('Frequency')).limit(10)
+
+        ax = sns.barplot(y='Crime Category', x='Frequency',
+                        data=crimes.toPandas())
+        title = f'NIBRS crimes arrestability - ' + city
+        self.barplot(ax, title, long_label=True)
+
 
 
 def main(args):
@@ -145,6 +174,63 @@ def main(args):
     df_all = df_ny_ch.union(df_la.select(*cols))
     plotter.get_most_common_crimes(df_all, 'All')
     plotter.get_most_common_locations(df_all, 'All')
+
+    # ARRESTABILITY FREQUENCY
+
+    cols = ['Crime Category', 'Arrest']
+    df_ch_la = df_la.select(*cols).union(df_ch.select(*cols))
+
+    plotter.get_arrestability_frequency(df_ch, 'Chicago')
+    plotter.get_arrestability_frequency(df_la, 'Los Angeles')
+    plotter.get_arrestability_frequency(df_ch_la, 'All')
+
+    # AVERAGE TIME FROM CRIME TO REPORT
+
+    cols_date = ['Date', 'Date Reported']
+    ny_dates = df_ny.select(*cols_date).withColumn('City', lit('New York'))
+    la_dates = df_la.select(*cols_date).withColumn('City', lit('Los Angeles'))
+    dates = ny_dates.union(la_dates).withColumn('City', lit('All'))
+    dates = dates.union(ny_dates).union(la_dates)
+
+    dates = dates.withColumn('report_timestamp', to_timestamp(
+        col('Date Reported'))).withColumn('date_timestamp', to_timestamp(col('Date')))
+
+    dates = dates.withColumn('diff_in_sec', col('report_timestamp').cast(
+        LongType()) - col('date_timestamp').cast(LongType()))
+
+    dates = dates.withColumn('diff_in_sec', when(col('diff_in_sec') < 0, col(
+        'diff_in_sec') * (-1)).otherwise(col('diff_in_sec')))
+
+    dates = dates.groupBy('City').avg('diff_in_sec')
+    dates = dates.withColumnRenamed(
+        'avg(diff_in_sec)', 'Number of days').withColumn('Number of days', col('Number of days')/86400).sort(desc('City'))
+
+    sns.barplot(x='City', y='Number of days', data=dates.toPandas())
+    plot_title = 'Average time from crime to report'
+    plt.title(plot_title)
+    plotter.save_show_plot(plot_title)
+
+    # VICTIM RACE - NEW YORK, LOS ANGELES, BOTH
+
+    cols_race = ['Victim Race']
+    ny_race = df_ny.select(*cols_race).withColumn('City', lit('New York'))
+    la_race = df_la.select(*cols_race).withColumn('City', lit('Los Angeles'))
+
+    race_data = plotter.get_victim_race(ny_race, la_race, 'Victim Race')
+    sns.barplot(x='Victim Race', y='Number of crimes',
+                data=race_data.toPandas())
+    plot_title = 'Victim Race - All'
+    plt.title(plot_title)
+    plotter.save_show_plot(plot_title)
+
+    race_data_all = plotter.get_victim_race(ny_race, la_race, ['Victim Race', 'City'])
+
+    sns.barplot(x='City', y='Number of crimes', data=race_data_all.toPandas(),
+                hue='Victim Race')
+
+    plot_title = 'Victim Race - NY & LA'
+    plt.title(plot_title)
+    plotter.save_show_plot(plot_title)
 
     # VICTIM AGE - NEW YORK, LOS ANGELES, BOTH
 
@@ -178,8 +264,8 @@ def main(args):
     other_crimes = suspect_sex_ny.filter(~col('Crime Category').contains(
         'SEX') & ~col('Crime Category').contains('RAPE')).groupBy('Suspect Sex').count()
 
-    plotter.get_suspect_sex_plot(sexual_crimes.toPandas(), 'Sexual Crimes - New York')
-    plotter.get_suspect_sex_plot(other_crimes.toPandas(), 'Other Crimes - New York')
+    plotter.get_suspect_sex_plot(sexual_crimes.toPandas(), 'Sexual Crimes - Suspects - New York')
+    plotter.get_suspect_sex_plot(other_crimes.toPandas(), 'Other Crimes - Suspects - New York')
 
     # VICTIM SEX - NEW YORK, LOS ANGELES, BOTH - SEXUAL AND OTHER CRIMES
 
@@ -190,31 +276,7 @@ def main(args):
     df_ny_la = df_ny.select(*cols).union(df_la.select(*cols))
     plotter.get_victim_sex(df_ny_la, 'All')
 
-    # AVERAGE TIME FROM CRIME TO REPORT
-
-    cols_date = ['Date', 'Date Reported']
-    ny_dates = df_ny.select(*cols_date).withColumn('City', lit('New York'))
-    la_dates = df_la.select(*cols_date).withColumn('City', lit('Los Angeles'))
-    dates = ny_dates.union(la_dates).withColumn('City', lit('All'))
-    dates = dates.union(ny_dates).union(la_dates)
-
-    dates = dates.withColumn('report_timestamp', to_timestamp(
-        col('Date Reported'))).withColumn('date_timestamp', to_timestamp(col('Date')))
-
-    dates = dates.withColumn('diff_in_sec', col('report_timestamp').cast(
-        LongType()) - col('date_timestamp').cast(LongType()))
-
-    dates = dates.withColumn('diff_in_sec', when(col('diff_in_sec') < 0, col(
-        'diff_in_sec') * (-1)).otherwise(col('diff_in_sec')))
-
-    dates = dates.groupBy('City').avg('diff_in_sec')
-    dates = dates.withColumnRenamed(
-        'avg(diff_in_sec)', 'Number of days').withColumn('Number of days', col('Number of days')/86400).sort(desc('City'))
-
-    sns.barplot(x='City', y='Number of days', data=dates.toPandas())
-    plot_title = 'Average time from crime to report'
-    plt.title(plot_title)
-    plotter.save_show_plot(plot_title)
+    print('\n\nKONIEC\n\n')
 
 
 if __name__ == '__main__':
