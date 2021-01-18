@@ -10,7 +10,8 @@ def print_unique(name, data, columns):
 
 
 name = 'Chicago'
-columns = ['IUCR', 'Primary Type', 'Description', 'Location Description', 'FBI Code', 'Arrest' ]
+columns = ['IUCR', 'Primary Type', 'Description', 'Location Description', 'FBI Code',
+           'Arrest', 'Beat', 'District', 'Ward', 'Community Area']
 data = pd.read_csv('Crimes_-_2001_to_Present.csv', usecols=columns)
 print_unique(name, data, columns)
 

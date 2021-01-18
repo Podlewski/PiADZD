@@ -143,6 +143,7 @@ dfla = dfla.withColumn('Victim Age Group', a__prefix(dfla['Victim Age Group']))
 dfla = dfla.withColumn('Victim Sex', s__prefix(dfla['Victim Sex']))
 dfla = dfla.withColumn('Victim Race', r__prefix(dfla['Victim Race']))
 dfla = dfla.withColumn('Location Type', l__prefix(dfla['Location Type']))
+dfla = dfla.withColumn('Arrest', dfla['Arrest'].cast(StringType()))
 for c in ['Victim Age Group', 'Victim Sex', 'Victim Race']:
     dfla = dfla.withColumn(c, v_prefix(dfla[c]))
 dfla = dfla.withColumn(
