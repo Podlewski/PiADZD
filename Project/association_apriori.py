@@ -67,17 +67,20 @@ def run(rdd_: RDD, support: float = 0.15, confidence: float = 0.5) -> None:
     frequent_singles = get_frequent_tuples(rdd_, 1, None, minimum=supp)
     frequent_doubles = get_frequent_tuples(rdd_, 2, items_from_tuples(frequent_singles), minimum=supp)
     frequent_triples = get_frequent_tuples(rdd_, 3, items_from_tuples(frequent_doubles), minimum=supp)
+    frequent_quadras = get_frequent_tuples(rdd_, 4, items_from_tuples(frequent_triples), minimum=supp)
 
     # count confidence levels
     doubles_confidence = get_confidence_tuples(frequent_doubles, frequent_singles, 2)
     triples_confidence = get_confidence_tuples(frequent_triples, frequent_doubles, 3)
+    quadras_confidence = get_confidence_tuples(frequent_quadras, frequent_triples, 4)
 
     # print
-    conf = doubles_confidence + triples_confidence
+    conf = doubles_confidence + triples_confidence + quadras_confidence
     print_confidence(sorted(filter(lambda x: x[1] > confidence, conf), key=lambda x: -x[1]))
 
     frequent_singles.update(frequent_doubles)
     frequent_singles.update(frequent_triples)
+    frequent_singles.update(frequent_quadras)
     source_size = rdd_.count()
     freq = [(i, freq, "-" if i is list else freq / source_size) for i, freq in frequent_singles.items()]
     print_frequency(sorted(freq, key=lambda x: -x[1]))

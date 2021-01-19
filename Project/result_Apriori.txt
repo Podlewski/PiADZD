@@ -3,10 +3,16 @@
 +--------------------------------------------------+--------------------+--------------------+
 |antecedent                                        |consequent          |confidence          |
 +--------------------------------------------------+--------------------+--------------------+
+|[c_THEFT, sr_UNKNOWN, ss_U]                       |sa_UNKNOWN          |0.9995611199009424  |
+|[l_STREET, sr_UNKNOWN, ss_U]                      |sa_UNKNOWN          |0.9988126177636281  |
+|[sr_UNKNOWN, ss_U, vs_M]                          |sa_UNKNOWN          |0.9986568374543916  |
+|[sr_UNKNOWN, ss_U, va_25-44]                      |sa_UNKNOWN          |0.9985856246127461  |
 |[sr_UNKNOWN, ss_U]                                |sa_UNKNOWN          |0.9983902034766123  |
+|[sr_UNKNOWN, ss_U, vs_F]                          |sa_UNKNOWN          |0.9981016126992315  |
 |[c_THEFT, ss_U]                                   |sa_UNKNOWN          |0.9973461509657477  |
 |[c_THEFT, sr_UNKNOWN]                             |sa_UNKNOWN          |0.9959594289326225  |
 |[l_STREET, ss_U]                                  |sa_UNKNOWN          |0.9926440416895504  |
+|[c_THEFT, sa_UNKNOWN, ss_U]                       |sr_UNKNOWN          |0.991910776893083   |
 |[ss_U, vs_M]                                      |sa_UNKNOWN          |0.9918857839156968  |
 |[ss_U, va_25-44]                                  |sa_UNKNOWN          |0.9913877730314046  |
 |[BROOKLYN, ss_U]                                  |sa_UNKNOWN          |0.9911174163023297  |
@@ -15,10 +21,15 @@
 |[c_THEFT, ss_U]                                   |sr_UNKNOWN          |0.9897127606702024  |
 |[l_STREET, sr_UNKNOWN]                            |sa_UNKNOWN          |0.98576685089511    |
 |[sr_UNKNOWN, vs_M]                                |sa_UNKNOWN          |0.9822558235858504  |
+|[sa_UNKNOWN, ss_U, vs_F]                          |sr_UNKNOWN          |0.9819479567326753  |
+|[sa_UNKNOWN, ss_U, va_25-44]                      |sr_UNKNOWN          |0.9811065832210636  |
 |[sa_UNKNOWN, ss_U]                                |sr_UNKNOWN          |0.9797303736287893  |
+|[sa_UNKNOWN, ss_U, vs_M]                          |sr_UNKNOWN          |0.9776872441107575  |
+|[l_STREET, sa_UNKNOWN, ss_U]                      |sr_UNKNOWN          |0.9776366310266704  |
 |[BROOKLYN, sr_UNKNOWN]                            |sa_UNKNOWN          |0.9755025676847311  |
 |[ss_U, va_25-44]                                  |sr_UNKNOWN          |0.9740347213822345  |
 |[ss_U, vs_F]                                      |sr_UNKNOWN          |0.9739365453544204  |
+|[c_THEFT, sa_UNKNOWN, sr_UNKNOWN]                 |ss_U                |0.9727754986182223  |
 |[ss_U]                                            |sr_UNKNOWN          |0.9724409790960933  |
 |[l_STREET, ss_U]                                  |sr_UNKNOWN          |0.9715988359247265  |
 |[sr_UNKNOWN]                                      |sa_UNKNOWN          |0.9714214973328664  |
@@ -27,9 +38,13 @@
 |[sr_UNKNOWN, va_25-44]                            |sa_UNKNOWN          |0.9710101182274873  |
 |[c_THEFT, sr_UNKNOWN]                             |ss_U                |0.9692703235390602  |
 |[sr_UNKNOWN, vs_F]                                |sa_UNKNOWN          |0.9600388071108195  |
+|[l_STREET, sa_UNKNOWN, sr_UNKNOWN]                |ss_U                |0.9368428750554191  |
+|[sa_UNKNOWN, sr_UNKNOWN, va_25-44]                |ss_U                |0.9312452076687053  |
 |[c_THEFT]                                         |sa_UNKNOWN          |0.9299456571838415  |
+|[sa_UNKNOWN, sr_UNKNOWN, vs_M]                    |ss_U                |0.9294459633004997  |
 |[sa_UNKNOWN, sr_UNKNOWN]                          |ss_U                |0.9264991184339362  |
 |[l_STREET, sr_UNKNOWN]                            |ss_U                |0.924606512074973   |
+|[sa_UNKNOWN, sr_UNKNOWN, vs_F]                    |ss_U                |0.9233189530083403  |
 |[sr_UNKNOWN, vs_M]                                |ss_U                |0.9141816046515285  |
 |[sr_UNKNOWN, va_25-44]                            |ss_U                |0.9055292775197322  |
 |[c_THEFT, sa_UNKNOWN]                             |sr_UNKNOWN          |0.9028579994245801  |
@@ -85,6 +100,7 @@
 |[BROOKLYN]                                        |sr_UNKNOWN          |0.526360326620655   |
 |[sa_UNKNOWN, ss_U]                                |vs_M                |0.5206388294013065  |
 |[ss_U]                                            |vs_M                |0.520153924501214   |
+|[sa_UNKNOWN, sr_UNKNOWN, ss_U]                    |vs_M                |0.5195530892944203  |
 |[sr_UNKNOWN, ss_U]                                |vs_M                |0.519414372468309   |
 |[sa_UNKNOWN, sr_UNKNOWN]                          |vs_M                |0.5179058258551799  |
 |[sr_UNKNOWN]                                      |vs_M                |0.5121933011229245  |
@@ -124,6 +140,7 @@
 |[c_THEFT]                                         |889538              |0.2541503740236557  |
 |[sr_UNKNOWN, ss_U, vs_M]                          |871823              |0.2490890119729855  |
 |[sa_UNKNOWN, sr_UNKNOWN, vs_F]                    |871793              |0.24908044065706564 |
+|[sa_UNKNOWN, sr_UNKNOWN, ss_U, vs_M]              |870652              |0.24875444494158078 |
 |[va_45-64]                                        |854296              |0.24408136350207968 |
 |[l_STREET, sa_UNKNOWN]                            |852696              |0.24362422665302114 |
 |[sr_UNKNOWN, va_25-44]                            |844812              |0.2413716848292851  |
@@ -134,10 +151,12 @@
 |[sa_UNKNOWN, ss_U, vs_F]                          |819741              |0.2342086361150682  |
 |[vr_WHITE]                                        |812131              |0.23203437897673346 |
 |[sr_UNKNOWN, ss_U, vs_F]                          |806474              |0.2304181145047808  |
+|[sa_UNKNOWN, sr_UNKNOWN, ss_U, vs_F]              |804943              |0.2299806916823379  |
 |[ss_U, va_25-44]                                  |785395              |0.224395622228965   |
 |[sa_UNKNOWN, ss_U, va_25-44]                      |778631              |0.22246307619956995 |
 |[ss_M, vs_F]                                      |776081              |0.2217345143463829  |
 |[sr_UNKNOWN, ss_U, va_25-44]                      |765002              |0.21856912737718304 |
+|[sa_UNKNOWN, sr_UNKNOWN, ss_U, va_25-44]          |763920              |0.2182599885830072  |
 |[BROOKLYN, sa_UNKNOWN]                            |753341              |0.21523745687913817 |
 |[QUEENS]                                          |750402              |0.21439775362952374 |
 |[c_THEFT, sr_UNKNOWN]                             |749894              |0.21425261267994763 |
@@ -148,6 +167,7 @@
 |[c_THEFT, ss_U]                                   |734405              |0.20982724227053015 |
 |[c_THEFT, sa_UNKNOWN, ss_U]                       |732456              |0.20927039244627071 |
 |[c_THEFT, sr_UNKNOWN, ss_U]                       |726850              |0.20766869921138179 |
+|[c_THEFT, sa_UNKNOWN, sr_UNKNOWN, ss_U]           |726531              |0.20757755755210075 |
 |[c_OTHER, vs_F]                                   |715785              |0.2045073121896112  |
 |[vr_BLACK, vs_F]                                  |707683              |0.20219248547019097 |
 |[va_25-44, vs_M]                                  |700111              |0.20002908533202135 |
@@ -161,6 +181,7 @@
 |[sa_UNKNOWN, va_45-64]                            |622342              |0.1778096630729996  |
 |[sa_UNKNOWN, vr_HISPANIC]                         |620270              |0.1772176708534688  |
 |[l_STREET, sr_UNKNOWN, ss_U]                      |615640              |0.17589483109650558 |
+|[l_STREET, sa_UNKNOWN, sr_UNKNOWN, ss_U]          |614909              |0.17568597669859196 |
 |[ss_M, va_25-44]                                  |608791              |0.17393799967200432 |
 |[BROOKLYN, vs_F]                                  |587365              |0.16781636584204893 |
 |[sr_BLACK, ss_M]                                  |585054              |0.16715608880569    |
@@ -269,5 +290,5 @@
 |[c_BURGLARY, false]                               |328388              |0.15516942389119975 |
 +--------------------------------------------------+--------------------+--------------------+
 
-Data loading time:	7.24 s
-Computing time:   	281.78 s
+Data loading time:	7.46 s
+Computing time:   	333.90 s
