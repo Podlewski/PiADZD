@@ -1,21 +1,11 @@
 import itertools
 from contextlib import redirect_stdout
 from operator import itemgetter
-from os import system, name
-from sys import argv
+from timeit import default_timer
 
 from pyspark.rdd import RDD
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import array
-from pyspark.sql.types import StringType
-from pyspark.sql.udf import UserDefinedFunction
 
-
-def clear_output() -> None:
-    if len(argv) > 1 and argv[1] == 'True':
-        [print() for _ in range(50)]
-    else:
-        system('cls' if name == 'nt' else 'clear')
+from association_common import clear_output, load_data
 
 
 def k_tuples(session, items: [], k: int):
@@ -59,7 +49,7 @@ def print_confidence(array_: []):
     print('+--------------------------------------------------+--------------------+--------------------+')
     for i in array_:
         print(f'|{list_to_string(i[0][:-1]):<50}|{i[0][-1]:<20}|{i[1]:<20}|')
-    print('+--------------------------------------------------+--------------------+--------------------+')
+    print('+--------------------------------------------------+--------------------+--------------------+\n')
 
 
 def print_frequency(array_: []):
@@ -68,7 +58,7 @@ def print_frequency(array_: []):
     print('+--------------------------------------------------+--------------------+--------------------+')
     for i in array_:
         print(f'|{list_to_string(i[0]):<50}|{i[1]:<20}|{i[2]:<20}|')
-    print('+--------------------------------------------------+--------------------+--------------------+')
+    print('+--------------------------------------------------+--------------------+--------------------+\n')
 
 
 def run(rdd_: RDD, support: float = 0.15, confidence: float = 0.5) -> None:
@@ -84,7 +74,7 @@ def run(rdd_: RDD, support: float = 0.15, confidence: float = 0.5) -> None:
 
     # print
     conf = doubles_confidence + triples_confidence
-    print_confidence(filter(lambda x: x[1] > confidence, conf))
+    print_confidence(sorted(filter(lambda x: x[1] > confidence, conf), key=lambda x: -x[1]))
 
     frequent_singles.update(frequent_doubles)
     frequent_singles.update(frequent_triples)
@@ -93,67 +83,19 @@ def run(rdd_: RDD, support: float = 0.15, confidence: float = 0.5) -> None:
     print_frequency(sorted(freq, key=lambda x: -x[1]))
 
 
-# SETUP #######################################################################
-ss = SparkSession.builder.getOrCreate()
-a__prefix = UserDefinedFunction(lambda x: 'a_' + x, StringType())
-c__prefix = UserDefinedFunction(lambda x: 'c_' + x, StringType())
-l__prefix = UserDefinedFunction(lambda x: 'l_' + x, StringType())
-r__prefix = UserDefinedFunction(lambda x: 'r_' + x, StringType())
-s__prefix = UserDefinedFunction(lambda x: 's_' + x, StringType())
-s_prefix = UserDefinedFunction(lambda x: 's' + x, StringType())
-v_prefix = UserDefinedFunction(lambda x: 'v' + x, StringType())
+# CALCULATIONS ################################################################
+dfny, dfch, dfla, timer_l = load_data()
+timer_c = default_timer()
 
-# NEW YORK ####################################################################
-data = ss.read.csv('data/dfny.csv', header=True, inferSchema=True)
-dfny = data.toDF(*data.columns)
-del data
-dfny = dfny.withColumn('Crime Category', c__prefix(dfny['Crime Category']))
-dfny = dfny.withColumn('Location Type', l__prefix(dfny['Location Type']))
-for c in ['Suspect Age Group', 'Victim Age Group']:
-    dfny = dfny.withColumn(c, a__prefix(dfny[c]))
-for c in ['Suspect Sex', 'Victim Sex']:
-    dfny = dfny.withColumn(c, s__prefix(dfny[c]))
-for c in ['Suspect Race', 'Victim Race']:
-    dfny = dfny.withColumn(c, r__prefix(dfny[c]))
-for c in ['Suspect Age Group', 'Suspect Sex', 'Suspect Race']:
-    dfny = dfny.withColumn(c, s_prefix(dfny[c]))
-for c in ['Victim Age Group', 'Victim Sex', 'Victim Race']:
-    dfny = dfny.withColumn(c, v_prefix(dfny[c]))
-dfny = dfny.withColumn(
-    'features', array(*list(set(dfny.columns) - {'Date', 'Crime Code', 'Local Crime Code', 'Crime Description'}))
-).select('features')
-
-# CHICAGO #####################################################################
-data = ss.read.csv('data/dfch.csv', header=True, inferSchema=True)
-dfch = data.toDF(*data.columns)
-del data
-dfch = dfch.withColumn('Crime Category', c__prefix(dfch['Crime Category']))
-dfch = dfch.withColumn('Location Type', l__prefix(dfch['Location Type']))
-dfch = dfch.withColumn('Arrest', dfch['Arrest'].cast(StringType()))
-dfch = dfch.withColumn(
-    'features', array(*list(set(dfch.columns) - {'Date', 'Crime Code', 'Local Crime Code', 'Crime Description'}))
-).select('features')
-
-# LOS ANGELES #################################################################
-data = ss.read.csv('data/dfla.csv', header=True, inferSchema=True)
-dfla = data.toDF(*data.columns)
-del data
-dfla = dfla.withColumn('Crime Category', c__prefix(dfla['Crime Category']))
-dfla = dfla.withColumn('Victim Age Group', a__prefix(dfla['Victim Age Group']))
-dfla = dfla.withColumn('Victim Sex', s__prefix(dfla['Victim Sex']))
-dfla = dfla.withColumn('Victim Race', r__prefix(dfla['Victim Race']))
-dfla = dfla.withColumn('Location Type', l__prefix(dfla['Location Type']))
-dfla = dfla.withColumn('Arrest', dfla['Arrest'].cast(StringType()))
-for c in ['Victim Age Group', 'Victim Sex', 'Victim Race']:
-    dfla = dfla.withColumn(c, v_prefix(dfla[c]))
-dfla = dfla.withColumn(
-    'features', array(*list(set(dfla.columns) - {'Date', 'Crime Code', 'Local Crime Code', 'Crime Description'}))
-).select('features')
-
-# GO ##########################################################################
+# OUTPUT ######################################################################
 clear_output()
 with open('result_Apriori.txt', 'w') as file:
     with redirect_stdout(file):
+        print('\n#################################### NEW YORK ###################################')
         run(dfny.rdd.flatMap(lambda row: [x for x in row]))
+        print('\n#################################### CHICAGO ####################################')
         run(dfch.rdd.flatMap(lambda row: [x for x in row]))
+        print('\n################################## LOS ANGELES ##################################')
         run(dfla.rdd.flatMap(lambda row: [x for x in row]))
+        print(f'Data loading time:\t{timer_c - timer_l:.2f} s')
+        print(f'Computing time:   \t{default_timer() - timer_c:.2f} s')
